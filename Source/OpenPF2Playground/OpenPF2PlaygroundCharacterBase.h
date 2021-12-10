@@ -7,14 +7,14 @@
 #include <CoreMinimal.h>
 #include <GameFramework/Character.h>
 
-#include "OpenPF2PlaygroundCharacter.generated.h"
+#include "OpenPF2PlaygroundCharacterBase.generated.h"
 
 /**
  * Base class for all characters in the OpenPF2 Playground sample.
  */
 UCLASS(Config=Game)
 // ReSharper disable once CppClassCanBeFinal
-class AOpenPF2PlaygroundCharacter : public ACharacter
+class AOpenPF2PlaygroundCharacterBase : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -27,7 +27,7 @@ class AOpenPF2PlaygroundCharacter : public ACharacter
 	class UCameraComponent* FollowCamera;
 
 public:
-	AOpenPF2PlaygroundCharacter();
+	AOpenPF2PlaygroundCharacterBase();
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)

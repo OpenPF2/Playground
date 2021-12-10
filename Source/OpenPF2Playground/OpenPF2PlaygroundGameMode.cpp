@@ -6,13 +6,13 @@
 
 #include <UObject/ConstructorHelpers.h>
 
-#include "OpenPF2PlaygroundCharacter.h"
+#include "OpenPF2PlaygroundCharacterBase.h"
 
 AOpenPF2PlaygroundGameMode::AOpenPF2PlaygroundGameMode()
 {
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(
-		TEXT("/Game/ThirdPersonCPP/Blueprints/ThirdPersonCharacter")
+		TEXT("/Game/OpenPF2Playground/Characters/TwinBlast/BP_TwinBlastPF2Character")
 	);
 
 	if (PlayerPawnBPClass.Class != nullptr)
