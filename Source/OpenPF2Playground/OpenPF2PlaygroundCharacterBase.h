@@ -5,7 +5,7 @@
 #pragma once
 
 #include <CoreMinimal.h>
-#include <GameFramework/Character.h>
+#include "PF2CharacterBase.h"
 
 #include "OpenPF2PlaygroundCharacterBase.generated.h"
 
@@ -14,7 +14,7 @@
  */
 UCLASS(Config=Game)
 // ReSharper disable once CppClassCanBeFinal
-class AOpenPF2PlaygroundCharacterBase : public ACharacter
+class AOpenPF2PlaygroundCharacterBase : public APF2CharacterBase
 {
 	GENERATED_BODY()
 
