@@ -1,0 +1,34 @@
+﻿OpenPF2 Playground License Terms
+================================
+Copyright 2021 Guy Elsmore-Paddock. All Rights Reserved.
+
+This project depends on the OpenPF2 Core framework in order to compile and
+function. The framework is licensed under a combination of the OGL + MPL
+licenses.
+
+This project is licensed only for use with Unreal Engine because it is adapted
+from the following content under copyright from Epic Games, Inc.:
+  - Action RPG Sample
+  - Infinity Blade - Adversaries
+  - Infinity Blade - Weapons
+  - Infinity Blade - Warriors
+  - Paragon - The Fey
+  - Paragon - Twinblast
+  - Soul: Cave
+  - Third Person Sample
+
+Epic has also indicated that the following additional restrictions apply:
+ - Infinity Blade content: These assets can only be used in Unreal Engine 4 
+   projects, with no exceptions. Without a custom license you cannot use to 
+   create sequels, remasters, or otherwise emulate the original game or use the
+   original game’s trademarks, character names, or other IP to advertise or name
+   your game.
+
+ - Paragon content: Licensed for use only with and under the same terms as the
+   Unreal Engine. You may not use the trademark PARAGON to advertise or name
+   your game.
+
+Therefore, all content and source code in this project may only be used in 
+derivative works that are part of a larger, Unreal-Engine-based project
+according to the terms of the Unreal® Engine End User License Agreement For
+Publishing (UE EULA). All other use is prohibited.
