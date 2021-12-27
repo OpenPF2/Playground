@@ -8,6 +8,7 @@
 #include <UObject/ConstructorHelpers.h>
 
 #include "OpenPF2PlaygroundCharacterBase.h"
+#include "OpenPF2PlaygroundGameState.h"
 
 AOpenPF2PlaygroundGameMode::AOpenPF2PlaygroundGameMode()
 {
@@ -16,8 +17,34 @@ AOpenPF2PlaygroundGameMode::AOpenPF2PlaygroundGameMode()
 		TEXT("/Game/OpenPF2Playground/Characters/TwinBlast/BP_TwinBlastPF2Character")
 	);
 
+	static ConstructorHelpers::FClassFinder<APlayerController> PlayerControllerBPClass(
+		TEXT("/Game/OpenPF2Playground/Characters/BP_PlayerController")
+	);
+
 	if (PlayerPawnBPClass.Class != nullptr)
 	{
 		this->DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+
+	if (PlayerControllerBPClass.Class != nullptr)
+	{
+		this->PlayerControllerClass = PlayerControllerBPClass.Class;
+	}
+
+	this->GameStateClass = AOpenPF2PlaygroundGameState::StaticClass();
+}
+
+void AOpenPF2PlaygroundGameMode::StartEncounterMode()
+{
+	Super::StartEncounterMode();
+}
+
+void AOpenPF2PlaygroundGameMode::StartExplorationMode()
+{
+	Super::StartExplorationMode();
+}
+
+void AOpenPF2PlaygroundGameMode::StartDowntimeMode()
+{
+	Super::StartDowntimeMode();
 }
