@@ -1,4 +1,7 @@
 # OpenPF2Playground
+
+<img src="./Logo.png#gh-light-mode-only" title="OpenPF2 Logo" alt="Tabletop made of four arrows pointing toward the center of the table, with the tagline 'Just add story.'" width="512">
+
 Provides an Unreal Engine sample project for demonstrating how to use the Open
 PF2 Role Playing Game (RPG) framework.
 
