@@ -4,3 +4,12 @@
 // distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 #include "OpenPF2PlaygroundGameState.h"
+
+#include <Net/UnrealNetwork.h>
+
+void AOpenPF2PlaygroundGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AOpenPF2PlaygroundGameState, RemainingEnemies);
+}

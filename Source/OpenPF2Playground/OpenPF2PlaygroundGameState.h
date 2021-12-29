@@ -17,4 +17,11 @@ UCLASS(MinimalAPI)
 class AOpenPF2PlaygroundGameState : public APF2GameStateBase
 {
 	GENERATED_BODY()
+
+public:
+	/**
+	 * How many enemies remain in the current encounter.
+	 */
+	UPROPERTY(Transient, Replicated)
+	int32 RemainingEnemies;
 };

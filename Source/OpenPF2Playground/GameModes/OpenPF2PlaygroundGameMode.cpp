@@ -7,8 +7,8 @@
 
 #include <UObject/ConstructorHelpers.h>
 
-#include "OpenPF2PlaygroundCharacterBase.h"
-#include "OpenPF2PlaygroundGameState.h"
+#include "../OpenPF2PlaygroundCharacterBase.h"
+#include "../OpenPF2PlaygroundGameState.h"
 
 AOpenPF2PlaygroundGameMode::AOpenPF2PlaygroundGameMode()
 {
