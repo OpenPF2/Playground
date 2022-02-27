@@ -41,7 +41,7 @@ protected:
 	// =================================================================================================================
 	// Protected Methods - APawn Overrides
 	// =================================================================================================================
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 	// =================================================================================================================
 	// Protected Methods
