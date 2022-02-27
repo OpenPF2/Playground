@@ -65,8 +65,8 @@ void AOpenPF2PlaygroundCharacterBase::SetupPlayerInputComponent(class UInputComp
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	PlayerInputComponent->BindAxis("MoveForward", this, &AOpenPF2PlaygroundCharacterBase::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AOpenPF2PlaygroundCharacterBase::MoveRight);
+	PlayerInputComponent->BindAxis("MoveForwardBack", this, &AOpenPF2PlaygroundCharacterBase::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRightLeft", this, &AOpenPF2PlaygroundCharacterBase::MoveRight);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "Turn" handles devices that provide an absolute delta, such as a mouse.
