@@ -1,6 +1,6 @@
 ﻿OpenPF2 Playground License Terms
 ================================
-Copyright 2021 Guy Elsmore-Paddock. All Rights Reserved.
+Copyright 2021-2022 Guy Elsmore-Paddock. All Rights Reserved.
 
 This project depends on the OpenPF2 Core framework in order to compile and
 function. The framework is licensed under a combination of the OGL + MPL
