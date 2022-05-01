@@ -32,3 +32,16 @@ Therefore, all content and source code in this project may only be used in
 derivative works that are part of a larger, Unreal-Engine-based project
 according to the terms of the Unreal® Engine End User License Agreement For
 Publishing (UE EULA). All other use is prohibited.
+
+================================================================================
+
+This project incorporates images licensed under the Creative Commons
+Attribution 3.0 Unported (CC BY 3.0) license
+(https://creativecommons.org/licenses/by/3.0/):
+
+- T_EncounterCursor: "Target" by vectlab from NounProject.com 
+  https://thenounproject.com/icon/target-2518419/
+
+Depending on the needs of your project, you may wish to license these materials
+through a commercial, royalty-free license from the Noun Project or replace them
+with your own materials to avoid this additional licensing burden.
