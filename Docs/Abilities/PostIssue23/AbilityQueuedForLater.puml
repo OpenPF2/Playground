@@ -1,0 +1,29 @@
+﻿@startuml
+
+autonumber
+
+UInputComponent -> BP_TwinBlastPF2Character: InputAction Attack
+
+BP_TwinBlastPF2Character -> CharacterCommand: new()
+BP_TwinBlastPF2Character -> CharacterCommand: GameplayAbility = GA_Attack_TwinBlast_FireGun
+BP_TwinBlastPF2Character -> CharacterCommand: AttemptExecute()
+
+CharacterCommand -> IPF2GameModeInterface: QueueCommandForCharacter(CharacterCommand)
+IPF2GameModeInterface -> CommandQueueComponent: EnqueueCommand(CharacterCommand)
+CommandQueueComponent -> CharacterCommand: OnEnqueued()
+IPF2GameModeInterface --> CharacterCommand: EPF2CommandQueueResult::Queued
+CharacterCommand --> BP_TwinBlastPF2Character: EPF2CommandQueueResult::Queued
+
+IPF2GameModeInterface -> IPF2GameModeInterface: ExecuteNextQueuedCommandForCharacter()
+IPF2GameModeInterface -> CommandQueueComponent: DequeueCommand()
+CommandQueueComponent -> CharacterCommand: OnDequeued()
+CommandQueueComponent --> IPF2GameModeInterface: CharacterCommand
+IPF2GameModeInterface -> CharacterCommand: CanProceed()
+CharacterCommand -> GA_Attack_TwinBlast_FireGun: CanActivateAbility(Handle, SourceTags, TargetTags)
+GA_Attack_TwinBlast_FireGun --> CharacterCommand: true
+CharacterCommand --> IPF2GameModeInterface: CanProceed = true
+IPF2GameModeInterface -> CharacterCommand: Execute()
+
+CharacterCommand -> AbilitySystemComponent: TryActivateAbility(GA_Attack_TwinBlast_FireGun)
+CharacterCommand --> IPF2GameModeInterface: EPF2AbilityActivationResult::Activated
+@enduml
