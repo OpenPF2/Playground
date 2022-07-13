@@ -66,16 +66,6 @@ AOpenPF2PlaygroundCharacterBase::AOpenPF2PlaygroundCharacterBase()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
 
-void AOpenPF2PlaygroundCharacterBase::BeginPlay()
-{
-	Super::BeginPlay();
-
-	if (this->HasAuthority())
-	{
-		this->AbilityBindings->GiveAbilitiesToCharacter(this);
-	}
-}
-
 void AOpenPF2PlaygroundCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	// Set up gameplay key bindings
@@ -100,9 +90,17 @@ void AOpenPF2PlaygroundCharacterBase::SetupPlayerInputComponent(UInputComponent*
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AOpenPF2PlaygroundCharacterBase::OnResetVR);
+}
 
-	check(this->AbilityBindings);
-	this->AbilityBindings->BindToInputComponent(PlayerInputComponent);
+void AOpenPF2PlaygroundCharacterBase::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if ((this->AbilityBindings != nullptr) && (this->InputComponent != nullptr))
+	{
+		this->AbilityBindings->LoadAbilitiesFromCharacter(this);
+		this->AbilityBindings->ConnectToInput(this->InputComponent);
+	}
 }
 
 // ReSharper disable once CppMemberFunctionMayBeStatic
@@ -159,8 +157,8 @@ void AOpenPF2PlaygroundCharacterBase::MoveRight(float Value)
 		// find out which way is right
 		const FRotator Rotation = PlayerController->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
-	
-		// get right vector 
+
+		// get right vector
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
 		// add movement in that direction

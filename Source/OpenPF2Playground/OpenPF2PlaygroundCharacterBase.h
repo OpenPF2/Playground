@@ -47,8 +47,9 @@ protected:
 	// =================================================================================================================
 	// Protected Methods - APawn Overrides
 	// =================================================================================================================
-	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
+	virtual void PossessedBy(AController* NewController) override;
 
 	// =================================================================================================================
 	// Protected Methods
@@ -68,7 +69,7 @@ protected:
 	 */
 	void MoveRight(float Value);
 
-	/** 
+	/**
 	 * Called via input to turn at a given rate.
 	 *
 	 * @param Rate
