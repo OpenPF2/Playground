@@ -26,6 +26,12 @@ class AOpenPF2PlaygroundCharacterBase : public APF2CharacterBase
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
+	/**
+	 * Component for granting abilities to the character that are bound to input.
+	 */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UPF2CommandBindingsComponent* AbilityBindings;
+
 public:
 	AOpenPF2PlaygroundCharacterBase();
 
@@ -41,6 +47,7 @@ protected:
 	// =================================================================================================================
 	// Protected Methods - APawn Overrides
 	// =================================================================================================================
+	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 	// =================================================================================================================

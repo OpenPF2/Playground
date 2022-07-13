@@ -12,6 +12,8 @@
 #include <GameFramework/Controller.h>
 #include <GameFramework/SpringArmComponent.h>
 
+#include "Commands/PF2CommandBindingsComponent.h"
+
 AOpenPF2PlaygroundCharacterBase::AOpenPF2PlaygroundCharacterBase()
 {
 	// Set size for collision capsule
@@ -54,8 +56,24 @@ AOpenPF2PlaygroundCharacterBase::AOpenPF2PlaygroundCharacterBase()
 
 	FollowCamera = FollowCameraComponent;
 
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
+	// Create the component that allows binding abilities to input actions.
+	UPF2CommandBindingsComponent* BindingsComponent =
+		CreateDefaultSubobject<UPF2CommandBindingsComponent>("AbilityBindings");
+
+	this->AbilityBindings = BindingsComponent;
+
+	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character)
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+}
+
+void AOpenPF2PlaygroundCharacterBase::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (this->HasAuthority())
+	{
+		this->AbilityBindings->GiveAbilitiesToCharacter(this);
+	}
 }
 
 void AOpenPF2PlaygroundCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -82,6 +100,9 @@ void AOpenPF2PlaygroundCharacterBase::SetupPlayerInputComponent(UInputComponent*
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AOpenPF2PlaygroundCharacterBase::OnResetVR);
+
+	check(this->AbilityBindings);
+	this->AbilityBindings->BindToInputComponent(PlayerInputComponent);
 }
 
 // ReSharper disable once CppMemberFunctionMayBeStatic
