@@ -90,17 +90,16 @@ void AOpenPF2PlaygroundCharacterBase::SetupPlayerInputComponent(UInputComponent*
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AOpenPF2PlaygroundCharacterBase::OnResetVR);
+
+	this->AbilityBindings->ConnectToInput(PlayerInputComponent);
 }
 
 void AOpenPF2PlaygroundCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	if ((this->AbilityBindings != nullptr) && (this->InputComponent != nullptr))
-	{
-		this->AbilityBindings->LoadAbilitiesFromCharacter(this);
-		this->AbilityBindings->ConnectToInput(this->InputComponent);
-	}
+	this->AbilityBindings->ClearBindings();
+	this->AbilityBindings->LoadAbilitiesFromCharacter(this);
 }
 
 // ReSharper disable once CppMemberFunctionMayBeStatic
