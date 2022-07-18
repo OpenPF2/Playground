@@ -18,8 +18,8 @@ from the following content under copyright from Epic Games, Inc.:
   - Third Person Sample
 
 Epic has also indicated that the following additional restrictions apply:
- - Infinity Blade content: These assets can only be used in Unreal Engine 4 
-   projects, with no exceptions. Without a custom license you cannot use to 
+ - Infinity Blade content: These assets can only be used in Unreal Engine 4
+   projects, with no exceptions. Without a custom license you cannot use to
    create sequels, remasters, or otherwise emulate the original game or use the
    original game’s trademarks, character names, or other IP to advertise or name
    your game.
@@ -28,7 +28,7 @@ Epic has also indicated that the following additional restrictions apply:
    Unreal Engine. You may not use the trademark PARAGON to advertise or name
    your game.
 
-Therefore, all content and source code in this project may only be used in 
+Therefore, all content and source code in this project may only be used in
 derivative works that are part of a larger, Unreal-Engine-based project
 according to the terms of the Unreal® Engine End User License Agreement For
 Publishing (UE EULA). All other use is prohibited.
@@ -39,8 +39,10 @@ This project incorporates images licensed under the Creative Commons
 Attribution 3.0 Unported (CC BY 3.0) license
 (https://creativecommons.org/licenses/by/3.0/):
 
-- T_EncounterCursor: "Target" by vectlab from NounProject.com 
+- T_EncounterCursor: "Target" by vectlab from NounProject.com
   https://thenounproject.com/icon/target-2518419/
+- T_Attack_TwinBlast_FireGun: "Gun" by Viet EDC from NounProject.com
+  https://thenounproject.com/icon/gun-1036548/
 
 Depending on the needs of your project, you may wish to license these materials
 through a commercial, royalty-free license from the Noun Project or replace them
