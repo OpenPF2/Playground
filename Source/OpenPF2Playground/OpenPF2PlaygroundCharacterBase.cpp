@@ -98,8 +98,16 @@ void AOpenPF2PlaygroundCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	this->AbilityBindings->ClearBindings();
-	this->AbilityBindings->LoadAbilitiesFromCharacter(this);
+	// Load abilities for the listen server.
+	this->LoadInputActivatableAbilities();
+}
+
+void AOpenPF2PlaygroundCharacterBase::OnRep_Controller()
+{
+	Super::OnRep_Controller();
+
+	// Load abilities for the client (not invoked on the listen server).
+	this->LoadInputActivatableAbilities();
 }
 
 // ReSharper disable once CppMemberFunctionMayBeStatic
@@ -162,5 +170,15 @@ void AOpenPF2PlaygroundCharacterBase::MoveRight(float Value)
 
 		// add movement in that direction
 		this->AddMovementInput(Direction, Value);
+	}
+}
+
+void AOpenPF2PlaygroundCharacterBase::LoadInputActivatableAbilities()
+{
+	this->AbilityBindings->ClearBindings();
+
+	if (this->AbilitySystemComponent != nullptr)
+	{
+		this->AbilityBindings->LoadAbilitiesFromCharacter(this);
 	}
 }

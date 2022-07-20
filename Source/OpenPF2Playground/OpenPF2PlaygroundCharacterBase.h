@@ -43,13 +43,17 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
+	// =================================================================================================================
+	// Public Methods - APawn Overrides
+	// =================================================================================================================
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_Controller() override;
+
 protected:
 	// =================================================================================================================
 	// Protected Methods - APawn Overrides
 	// =================================================================================================================
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-
-	virtual void PossessedBy(AController* NewController) override;
 
 	// =================================================================================================================
 	// Protected Methods
@@ -94,6 +98,17 @@ protected:
 	 * Handler for when a touch input stops.
 	 */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
+
+	/**
+	 * Loads default input action bindings from all of the granted, activatable abilities of this character.
+	 *
+	 * If this character has any abilities already bound to input, those bindings are cleared before the input is bound.
+	 * If the input bindings component is already wired-up to input for this character, the actions are bound to input
+	 * actions immediately.
+	 *
+	 * This should be called on the client whenever the abilities of the character have changed.
+	 */
+	void LoadInputActivatableAbilities();
 
 public:
 	// =================================================================================================================
