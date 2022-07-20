@@ -132,7 +132,7 @@ void AOpenPF2PlaygroundCharacterBase::LookUpAtRate(const float Rate)
 
 void AOpenPF2PlaygroundCharacterBase::MoveForward(const float Value)
 {
-	AController* PlayerController = this->Controller;
+	const AController* PlayerController = this->Controller;
 
 	if ((PlayerController != nullptr) && (Value != 0.0f))
 	{
@@ -149,7 +149,7 @@ void AOpenPF2PlaygroundCharacterBase::MoveForward(const float Value)
 
 void AOpenPF2PlaygroundCharacterBase::MoveRight(float Value)
 {
-	AController* PlayerController = this->Controller;
+	const AController* PlayerController = this->Controller;
 
 	if ((PlayerController != nullptr) && (Value != 0.0f))
 	{
