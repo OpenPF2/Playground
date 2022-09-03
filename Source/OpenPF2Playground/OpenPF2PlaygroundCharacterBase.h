@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
 #include "PF2CharacterBase.h"
 
 #include "OpenPF2PlaygroundCharacterBase.generated.h"
