@@ -12,8 +12,9 @@ from the following content under copyright from Epic Games, Inc.:
   - Infinity Blade - Adversaries
   - Infinity Blade - Weapons
   - Infinity Blade - Warriors
-  - Paragon - The Fey
-  - Paragon - Twinblast
+  - Paragon: The Fey
+  - Paragon: Greystone
+  - Paragon: Twinblast
   - Soul: Cave
   - Third Person Sample
 
