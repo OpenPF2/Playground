@@ -1,13 +1,16 @@
-// Copyright 2021 Guy Elsmore-Paddock. All Rights Reserved.
+// Copyright 2021-2022 Guy Elsmore-Paddock. All Rights Reserved.
 // Adapted from content that is Copyright Epic Games, Inc. (Third Person Sample)
 // Licensed only for use with Unreal Engine.
 
 #include "OpenPF2PlaygroundCharacterBase.h"
 
 #include <HeadMountedDisplayFunctionLibrary.h>
+
 #include <Camera/CameraComponent.h>
+
 #include <Components/CapsuleComponent.h>
 #include <Components/InputComponent.h>
+
 #include <GameFramework/CharacterMovementComponent.h>
 #include <GameFramework/Controller.h>
 #include <GameFramework/SpringArmComponent.h>
@@ -66,34 +69,6 @@ AOpenPF2PlaygroundCharacterBase::AOpenPF2PlaygroundCharacterBase()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
 
-void AOpenPF2PlaygroundCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	// Set up gameplay key bindings
-	check(PlayerInputComponent);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-
-	PlayerInputComponent->BindAxis("MoveForwardBack", this, &AOpenPF2PlaygroundCharacterBase::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRightLeft", this, &AOpenPF2PlaygroundCharacterBase::MoveRight);
-
-	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
-	// "Turn" handles devices that provide an absolute delta, such as a mouse.
-	// "TurnRate" is for devices that we choose to treat as a rate of change, such as an analog joystick
-	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("TurnRate", this, &AOpenPF2PlaygroundCharacterBase::TurnAtRate);
-	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("LookUpRate", this, &AOpenPF2PlaygroundCharacterBase::LookUpAtRate);
-
-	// handle touch devices
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &AOpenPF2PlaygroundCharacterBase::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &AOpenPF2PlaygroundCharacterBase::TouchStopped);
-
-	// VR headset functionality
-	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AOpenPF2PlaygroundCharacterBase::OnResetVR);
-
-	this->AbilityBindings->ConnectToInput(PlayerInputComponent);
-}
-
 void AOpenPF2PlaygroundCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
@@ -110,35 +85,45 @@ void AOpenPF2PlaygroundCharacterBase::OnRep_Controller()
 	this->LoadInputActivatableAbilities();
 }
 
-// ReSharper disable once CppMemberFunctionMayBeStatic
-void AOpenPF2PlaygroundCharacterBase::OnResetVR()
+void AOpenPF2PlaygroundCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
+	// Set up gameplay key bindings
+	check(PlayerInputComponent);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+
+	PlayerInputComponent->BindAxis("MoveForwardBack", this, &AOpenPF2PlaygroundCharacterBase::Native_OnMoveForwardBack);
+	PlayerInputComponent->BindAxis("MoveRightLeft", this, &AOpenPF2PlaygroundCharacterBase::Native_OnMoveRightLeft);
+
+	// We have 2 versions of the rotation bindings to handle two distinct kinds of devices:
+	//   - "Turn" handles devices that provide an absolute delta, such as a mouse.
+	//   - "TurnRate" is for devices that we choose to treat as a rate of change, such as an analog joystick.
+	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("TurnRate", this, &AOpenPF2PlaygroundCharacterBase::Native_OnTurnAtRate);
+	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+	PlayerInputComponent->BindAxis("LookUpRate", this, &AOpenPF2PlaygroundCharacterBase::Native_OnLookUpAtRate);
+
+	// handle touch devices
+	PlayerInputComponent->BindTouch(IE_Pressed, this, &AOpenPF2PlaygroundCharacterBase::Native_OnTouchStarted);
+	PlayerInputComponent->BindTouch(IE_Released, this, &AOpenPF2PlaygroundCharacterBase::Native_OnTouchStopped);
+
+	// VR headset functionality
+	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AOpenPF2PlaygroundCharacterBase::Native_OnResetVR);
+
+	this->AbilityBindings->ConnectToInput(PlayerInputComponent);
 }
 
-void AOpenPF2PlaygroundCharacterBase::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
+void AOpenPF2PlaygroundCharacterBase::LoadInputActivatableAbilities()
 {
-	this->Jump();
+	this->AbilityBindings->ClearBindings();
+
+	if (this->AbilitySystemComponent != nullptr)
+	{
+		this->AbilityBindings->LoadAbilitiesFromCharacter(this);
+	}
 }
 
-void AOpenPF2PlaygroundCharacterBase::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
-{
-	this->StopJumping();
-}
-
-void AOpenPF2PlaygroundCharacterBase::TurnAtRate(const float Rate)
-{
-	// Calculate delta for this frame from the rate information
-	this->AddControllerYawInput(Rate * this->BaseTurnRate * this->GetWorld()->GetDeltaSeconds());
-}
-
-void AOpenPF2PlaygroundCharacterBase::LookUpAtRate(const float Rate)
-{
-	// Calculate delta for this frame from the rate information
-	this->AddControllerPitchInput(Rate * this->BaseLookUpRate * this->GetWorld()->GetDeltaSeconds());
-}
-
-void AOpenPF2PlaygroundCharacterBase::MoveForward(const float Value)
+void AOpenPF2PlaygroundCharacterBase::Native_OnMoveForwardBack(const float Value)
 {
 	const AController* PlayerController = this->Controller;
 
@@ -155,7 +140,7 @@ void AOpenPF2PlaygroundCharacterBase::MoveForward(const float Value)
 	}
 }
 
-void AOpenPF2PlaygroundCharacterBase::MoveRight(float Value)
+void AOpenPF2PlaygroundCharacterBase::Native_OnMoveRightLeft(float Value)
 {
 	const AController* PlayerController = this->Controller;
 
@@ -173,12 +158,30 @@ void AOpenPF2PlaygroundCharacterBase::MoveRight(float Value)
 	}
 }
 
-void AOpenPF2PlaygroundCharacterBase::LoadInputActivatableAbilities()
+void AOpenPF2PlaygroundCharacterBase::Native_OnTurnAtRate(const float Rate)
 {
-	this->AbilityBindings->ClearBindings();
+	// Calculate delta for this frame from the rate information
+	this->AddControllerYawInput(Rate * this->BaseTurnRate * this->GetWorld()->GetDeltaSeconds());
+}
 
-	if (this->AbilitySystemComponent != nullptr)
-	{
-		this->AbilityBindings->LoadAbilitiesFromCharacter(this);
-	}
+void AOpenPF2PlaygroundCharacterBase::Native_OnLookUpAtRate(const float Rate)
+{
+	// Calculate delta for this frame from the rate information
+	this->AddControllerPitchInput(Rate * this->BaseLookUpRate * this->GetWorld()->GetDeltaSeconds());
+}
+
+void AOpenPF2PlaygroundCharacterBase::Native_OnTouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
+{
+	this->Jump();
+}
+
+void AOpenPF2PlaygroundCharacterBase::Native_OnTouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
+{
+	this->StopJumping();
+}
+
+// ReSharper disable once CppMemberFunctionMayBeStatic
+void AOpenPF2PlaygroundCharacterBase::Native_OnResetVR()
+{
+	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
 }
