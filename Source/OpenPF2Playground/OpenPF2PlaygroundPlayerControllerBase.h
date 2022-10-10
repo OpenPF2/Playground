@@ -27,6 +27,7 @@ protected:
 	// =================================================================================================================
 	// Protected Methods - APlayerController Overrides
 	// =================================================================================================================
+	virtual void OnPossess(APawn* InPawn) override;
 	virtual void AcknowledgePossession(APawn* NewPawn) override;
 	virtual void SetupInputComponent() override;
 };
