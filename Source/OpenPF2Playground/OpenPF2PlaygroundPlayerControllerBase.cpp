@@ -5,6 +5,20 @@
 
 #include "OpenPF2PlaygroundPlayerControllerBase.h"
 
+#include "InputBindableCharacterInterface.h"
+
+void AOpenPF2PlaygroundPlayerControllerBase::AcknowledgePossession(APawn* NewPawn)
+{
+	IInputBindableCharacterInterface* BindableCharacterIntf = Cast<IInputBindableCharacterInterface>(NewPawn);
+
+	Super::AcknowledgePossession(NewPawn);
+
+	if (BindableCharacterIntf != nullptr)
+	{
+		BindableCharacterIntf->LoadInputActionBindings();
+	}
+}
+
 void AOpenPF2PlaygroundPlayerControllerBase::SetupInputComponent()
 {
 	Super::SetupInputComponent();

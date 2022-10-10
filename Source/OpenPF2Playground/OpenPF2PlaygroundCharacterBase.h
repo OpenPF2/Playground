@@ -8,6 +8,7 @@
 
 #include <GameFramework/SpringArmComponent.h>
 
+#include "InputBindableCharacterInterface.h"
 #include "PF2CharacterBase.h"
 #include "OpenPF2PlaygroundCharacterBase.generated.h"
 
@@ -24,7 +25,7 @@ class UPF2CommandBindingsComponent;
  */
 UCLASS(Config=Game)
 // ReSharper disable once CppClassCanBeFinal
-class AOpenPF2PlaygroundCharacterBase : public APF2CharacterBase
+class AOpenPF2PlaygroundCharacterBase : public APF2CharacterBase, public IInputBindableCharacterInterface
 {
 	GENERATED_BODY()
 
@@ -66,10 +67,9 @@ public:
 	AOpenPF2PlaygroundCharacterBase();
 
 	// =================================================================================================================
-	// Public Methods - APawn Overrides
+	// Public Methods - IInputBindableCharacterInterface Implementation
 	// =================================================================================================================
-	virtual void PossessedBy(AController* NewController) override;
-	virtual void OnRep_Controller() override;
+	virtual void LoadInputActionBindings() override;
 
 	// =================================================================================================================
 	// Public Methods
@@ -103,20 +103,6 @@ protected:
 	// Protected Methods - APawn Overrides
 	// =================================================================================================================
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-
-	// =================================================================================================================
-	// Protected Methods
-	// =================================================================================================================
-	/**
-	 * Loads default input action bindings from all of the granted, activatable abilities of this character.
-	 *
-	 * If this character has any abilities already bound to input, those bindings are cleared before the input is bound.
-	 * If the input bindings component is already wired-up to input for this character, the actions are bound to input
-	 * actions immediately.
-	 *
-	 * This should be called on the client whenever the abilities of the character have changed.
-	 */
-	void LoadInputActivatableAbilities();
 
 	// =================================================================================================================
 	// Protected Native Event Callbacks

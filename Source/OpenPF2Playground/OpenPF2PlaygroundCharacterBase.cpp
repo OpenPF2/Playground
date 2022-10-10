@@ -15,7 +15,11 @@
 #include <GameFramework/Controller.h>
 #include <GameFramework/SpringArmComponent.h>
 
+#include "OpenPF2Core.h"
+
 #include "Commands/PF2CommandBindingsComponent.h"
+
+#include "Utilities/PF2LogUtilities.h"
 
 AOpenPF2PlaygroundCharacterBase::AOpenPF2PlaygroundCharacterBase()
 {
@@ -69,20 +73,22 @@ AOpenPF2PlaygroundCharacterBase::AOpenPF2PlaygroundCharacterBase()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
 
-void AOpenPF2PlaygroundCharacterBase::PossessedBy(AController* NewController)
+void AOpenPF2PlaygroundCharacterBase::LoadInputActionBindings()
 {
-	Super::PossessedBy(NewController);
+	UE_LOG(
+		LogPf2CoreAbilities,
+		Verbose,
+		TEXT("[%s] Character ('%s') is loading activatable abilities."),
+		*(PF2LogUtilities::GetHostNetId(this->GetWorld())),
+		*(this->GetIdForLogs())
+	);
 
-	// Load abilities for the listen server.
-	this->LoadInputActivatableAbilities();
-}
+	this->AbilityBindings->ClearBindings();
 
-void AOpenPF2PlaygroundCharacterBase::OnRep_Controller()
-{
-	Super::OnRep_Controller();
-
-	// Load abilities for the client (not invoked on the listen server).
-	this->LoadInputActivatableAbilities();
+	if (this->AbilitySystemComponent != nullptr)
+	{
+		this->AbilityBindings->LoadAbilitiesFromCharacter();
+	}
 }
 
 void AOpenPF2PlaygroundCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -111,16 +117,6 @@ void AOpenPF2PlaygroundCharacterBase::SetupPlayerInputComponent(UInputComponent*
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AOpenPF2PlaygroundCharacterBase::Native_OnResetVR);
 
 	this->AbilityBindings->ConnectToInput(PlayerInputComponent);
-}
-
-void AOpenPF2PlaygroundCharacterBase::LoadInputActivatableAbilities()
-{
-	this->AbilityBindings->ClearBindings();
-
-	if (this->AbilitySystemComponent != nullptr)
-	{
-		this->AbilityBindings->LoadAbilitiesFromCharacter(this);
-	}
 }
 
 void AOpenPF2PlaygroundCharacterBase::Native_OnMoveForwardBack(const float Value)
