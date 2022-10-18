@@ -6,7 +6,6 @@
 #pragma once
 
 #include "PF2PlayerControllerBase.h"
-
 #include "OpenPF2PlaygroundPlayerControllerBase.generated.h"
 
 /**
@@ -27,7 +26,6 @@ protected:
 	// =================================================================================================================
 	// Protected Methods - APlayerController Overrides
 	// =================================================================================================================
-	virtual void OnPossess(APawn* InPawn) override;
-	virtual void AcknowledgePossession(APawn* NewPawn) override;
+	virtual void OnPossess(APawn* PawnToPossess) override;
 	virtual void SetupInputComponent() override;
 };
