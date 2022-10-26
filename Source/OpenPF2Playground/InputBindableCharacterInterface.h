@@ -40,4 +40,14 @@ public:
 	 * character is possessed by an AI controller).
 	 */
 	virtual void LoadInputActionBindings() = 0;
+
+	/**
+	 * Configures this character to refresh action bindings whenever abilities in the character's ASC change locally.
+	 *
+	 * This has no effect in each of the following situations:
+	 *   - If this is called on the server (since this is only relevant to clients).
+	 *   - The character has no ASC.
+	 *   - The character has already setup an ability change listener on this client.
+	 */
+	virtual void SetupClientAbilityChangeListener() = 0;
 };

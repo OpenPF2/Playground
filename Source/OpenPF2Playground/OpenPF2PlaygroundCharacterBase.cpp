@@ -91,6 +91,29 @@ void AOpenPF2PlaygroundCharacterBase::LoadInputActionBindings()
 	}
 }
 
+void AOpenPF2PlaygroundCharacterBase::SetupClientAbilityChangeListener()
+{
+	IPF2AbilitySystemInterface* Asc = Cast<IPF2AbilitySystemInterface>(this->GetAbilitySystemComponent());
+
+	if (Asc == nullptr)
+	{
+		UE_LOG(
+			LogPf2PlaygroundInput,
+			Warning,
+			TEXT("[%s] Character ('%s') is missing an OpenPF2-compatible ASC and cannot listen for ability changes."),
+			*(PF2LogUtilities::GetHostNetId(this->GetWorld())),
+			*(this->GetIdForLogs())
+		);
+	}
+	else
+	{
+		Asc->GetClientAbilityChangeDelegate()->AddUniqueDynamic(
+			this,
+			&AOpenPF2PlaygroundCharacterBase::LoadInputActionBindings
+		);
+	}
+}
+
 void AOpenPF2PlaygroundCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	// Set up gameplay key bindings

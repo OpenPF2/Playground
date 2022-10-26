@@ -7,15 +7,16 @@
 
 #include "InputBindableCharacterInterface.h"
 
-void AOpenPF2PlaygroundPlayerControllerBase::OnPossess(APawn* PawnToPossess)
+void AOpenPF2PlaygroundPlayerControllerBase::AcknowledgePossession(APawn* InPawn)
 {
-	IInputBindableCharacterInterface* BindableCharacterIntf = Cast<IInputBindableCharacterInterface>(PawnToPossess);
+	IInputBindableCharacterInterface* BindableCharacterIntf = Cast<IInputBindableCharacterInterface>(InPawn);
 
-	Super::OnPossess(PawnToPossess);
+	Super::AcknowledgePossession(InPawn);
 
 	if (BindableCharacterIntf != nullptr)
 	{
 		BindableCharacterIntf->LoadInputActionBindings();
+		BindableCharacterIntf->SetupClientAbilityChangeListener();
 	}
 }
 

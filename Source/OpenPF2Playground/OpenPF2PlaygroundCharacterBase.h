@@ -69,7 +69,10 @@ public:
 	// =================================================================================================================
 	// Public Methods - IInputBindableCharacterInterface Implementation
 	// =================================================================================================================
+	UFUNCTION()
 	virtual void LoadInputActionBindings() override;
+
+	virtual void SetupClientAbilityChangeListener() override;
 
 	// =================================================================================================================
 	// Public Methods
