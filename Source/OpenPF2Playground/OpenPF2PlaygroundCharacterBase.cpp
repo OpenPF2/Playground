@@ -15,7 +15,7 @@
 #include <GameFramework/Controller.h>
 #include <GameFramework/SpringArmComponent.h>
 
-#include "OpenPF2Core.h"
+#include "OpenPF2Playground.h"
 
 #include "Commands/PF2CommandBindingsComponent.h"
 
@@ -76,7 +76,7 @@ AOpenPF2PlaygroundCharacterBase::AOpenPF2PlaygroundCharacterBase()
 void AOpenPF2PlaygroundCharacterBase::LoadInputActionBindings()
 {
 	UE_LOG(
-		LogPf2CoreAbilities,
+		LogPf2PlaygroundInput,
 		Verbose,
 		TEXT("[%s] Character ('%s') is loading activatable abilities."),
 		*(PF2LogUtilities::GetHostNetId(this->GetWorld())),
