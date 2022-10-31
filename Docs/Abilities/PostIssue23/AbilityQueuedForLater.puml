@@ -2,28 +2,55 @@
 
 autonumber
 
-UInputComponent -> BP_TwinBlastPF2Character: InputAction Attack
+UInputComponent -> FPF2CommandInputBinding: LocalInputPressed(binding)
 
-BP_TwinBlastPF2Character -> CharacterCommand: new()
-BP_TwinBlastPF2Character -> CharacterCommand: GameplayAbility = GA_Attack_TwinBlast_FireGun
-BP_TwinBlastPF2Character -> CharacterCommand: AttemptExecute()
+participant "attackBinding: FPF2CommandInputBinding" as binding
 
-CharacterCommand -> IPF2GameModeInterface: QueueCommandForCharacter(CharacterCommand)
-IPF2GameModeInterface -> CommandQueueComponent: EnqueueCommand(CharacterCommand)
-CommandQueueComponent -> CharacterCommand: OnEnqueued()
-IPF2GameModeInterface --> CharacterCommand: EPF2CommandQueueResult::Queued
-CharacterCommand --> BP_TwinBlastPF2Character: EPF2CommandQueueResult::Queued
+FPF2CommandInputBinding -> binding: ActivateAbility()
+binding -> UPF2CommandBindingsComponent: ExecuteBoundAbility(AbilitySpecHandle = GA_Attack_XYZ, character)
 
-IPF2GameModeInterface -> IPF2GameModeInterface: ExecuteNextQueuedCommandForCharacter()
-IPF2GameModeInterface -> CommandQueueComponent: DequeueCommand()
-CommandQueueComponent -> CharacterCommand: OnDequeued()
-CommandQueueComponent --> IPF2GameModeInterface: CharacterCommand
-IPF2GameModeInterface -> CharacterCommand: CanProceed()
-CharacterCommand -> GA_Attack_TwinBlast_FireGun: CanActivateAbility(Handle, SourceTags, TargetTags)
-GA_Attack_TwinBlast_FireGun --> CharacterCommand: true
-CharacterCommand --> IPF2GameModeInterface: CanProceed = true
-IPF2GameModeInterface -> CharacterCommand: Execute()
+participant "character: IPF2CharacterInterface" as character
+participant "playerController: IPF2PlayerControllerInterface" as playerController
 
-CharacterCommand -> AbilitySystemComponent: TryActivateAbility(GA_Attack_TwinBlast_FireGun)
-CharacterCommand --> IPF2GameModeInterface: EPF2AbilityActivationResult::Activated
+UPF2CommandBindingsComponent -> character: GetPlayerController()
+character --> UPF2CommandBindingsComponent: playerController
+
+UPF2CommandBindingsComponent -> playerController: Server_ExecuteCharacterCommand(AbilitySpecHandle = GA_Attack_XYZ, character)
+
+participant "PF2CharacterCommand" as CharacterCommandStatic << Class >>
+participant "command: PF2CharacterCommand" as CharacterCommandInstance << Instance >>
+
+playerController -> CharacterCommandStatic: Create(GameplayAbility = GA_Attack_TwinBlast_FireGun)
+CharacterCommandStatic -> World: SpawnActor<CharacterCommand>();
+World -> CharacterCommandInstance: new()
+World --> CharacterCommandStatic: command
+CharacterCommandStatic --> playerController: command
+
+playerController -> CharacterCommandInstance: AttemptExecuteOrQueue()
+CharacterCommandInstance -> IPF2GameModeInterface: AttemptToExecuteOrQueueCommand(command)
+IPF2GameModeInterface -> IPF2ModeOfPlayRuleSetInterface: AttemptToExecuteOrQueueCommand(command)
+group Behavior Depends on MoPRS Blueprint
+IPF2ModeOfPlayRuleSetInterface -> UPF2CommandQueueComponent: Enqueue(command)
+IPF2ModeOfPlayRuleSetInterface --> IPF2GameModeInterface: EPF2CommandExecuteOrQueueResult::Queued
+end
+IPF2GameModeInterface --> CharacterCommandInstance: EPF2CommandExecuteOrQueueResult::Queued
+
+UInputComponent -> FPF2CommandInputBinding: LocalInputReleased(binding)
+FPF2CommandInputBinding -> binding: DeactivateAbility()
+
+group Invoked Later by MoPRS Blueprint
+IPF2ModeOfPlayRuleSetInterface -> IPF2ModeOfPlayRuleSetInterface: ExecuteNextQueuedCommandForCharacter(character)
+end
+IPF2ModeOfPlayRuleSetInterface -> UPF2CommandQueueComponent: PopAndExecuteNext()
+UPF2CommandQueueComponent -> CharacterCommandInstance: AttemptExecuteImmediately()
+
+participant "asc: UAbilitySystemComponent" as AscInstance
+CharacterCommandInstance -> character: GetAbilitySystemComponent()
+character --> CharacterCommandInstance: asc
+
+CharacterCommandInstance -> AscInstance: TryActivateAbility(AbilitySpecHandle = GA_Attack_XYZ)
+AscInstance --> CharacterCommandInstance: true
+CharacterCommandInstance --> UPF2CommandQueueComponent: EPF2AbilityActivationResult::Activated
+UPF2CommandQueueComponent --> IPF2ModeOfPlayRuleSetInterface: EPF2AbilityActivationResult::Activated
+
 @enduml
