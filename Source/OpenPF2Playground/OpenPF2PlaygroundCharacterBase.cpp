@@ -12,6 +12,8 @@
 #include <GameFramework/Controller.h>
 #include <GameFramework/SpringArmComponent.h>
 
+#include "Commands/PF2CommandBindingsComponent.h"
+
 AOpenPF2PlaygroundCharacterBase::AOpenPF2PlaygroundCharacterBase()
 {
 	// Set size for collision capsule
@@ -54,7 +56,13 @@ AOpenPF2PlaygroundCharacterBase::AOpenPF2PlaygroundCharacterBase()
 
 	FollowCamera = FollowCameraComponent;
 
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
+	// Create the component that allows binding abilities to input actions.
+	UPF2CommandBindingsComponent* BindingsComponent =
+		CreateDefaultSubobject<UPF2CommandBindingsComponent>("AbilityBindings");
+
+	this->AbilityBindings = BindingsComponent;
+
+	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character)
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
 
@@ -82,6 +90,24 @@ void AOpenPF2PlaygroundCharacterBase::SetupPlayerInputComponent(UInputComponent*
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AOpenPF2PlaygroundCharacterBase::OnResetVR);
+
+	this->AbilityBindings->ConnectToInput(PlayerInputComponent);
+}
+
+void AOpenPF2PlaygroundCharacterBase::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	// Load abilities for the listen server.
+	this->LoadInputActivatableAbilities();
+}
+
+void AOpenPF2PlaygroundCharacterBase::OnRep_Controller()
+{
+	Super::OnRep_Controller();
+
+	// Load abilities for the client (not invoked on the listen server).
+	this->LoadInputActivatableAbilities();
 }
 
 // ReSharper disable once CppMemberFunctionMayBeStatic
@@ -114,7 +140,7 @@ void AOpenPF2PlaygroundCharacterBase::LookUpAtRate(const float Rate)
 
 void AOpenPF2PlaygroundCharacterBase::MoveForward(const float Value)
 {
-	AController* PlayerController = this->Controller;
+	const AController* PlayerController = this->Controller;
 
 	if ((PlayerController != nullptr) && (Value != 0.0f))
 	{
@@ -131,18 +157,28 @@ void AOpenPF2PlaygroundCharacterBase::MoveForward(const float Value)
 
 void AOpenPF2PlaygroundCharacterBase::MoveRight(float Value)
 {
-	AController* PlayerController = this->Controller;
+	const AController* PlayerController = this->Controller;
 
 	if ((PlayerController != nullptr) && (Value != 0.0f))
 	{
 		// find out which way is right
 		const FRotator Rotation = PlayerController->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
-	
-		// get right vector 
+
+		// get right vector
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
 		// add movement in that direction
 		this->AddMovementInput(Direction, Value);
+	}
+}
+
+void AOpenPF2PlaygroundCharacterBase::LoadInputActivatableAbilities()
+{
+	this->AbilityBindings->ClearBindings();
+
+	if (this->AbilitySystemComponent != nullptr)
+	{
+		this->AbilityBindings->LoadAbilitiesFromCharacter(this);
 	}
 }

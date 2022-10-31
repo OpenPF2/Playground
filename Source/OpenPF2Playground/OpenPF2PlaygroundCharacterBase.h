@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
 #include "PF2CharacterBase.h"
 
 #include "OpenPF2PlaygroundCharacterBase.generated.h"
@@ -26,6 +25,12 @@ class AOpenPF2PlaygroundCharacterBase : public APF2CharacterBase
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
+	/**
+	 * Component for granting abilities to the character that are bound to input.
+	 */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UPF2CommandBindingsComponent* AbilityBindings;
+
 public:
 	AOpenPF2PlaygroundCharacterBase();
 
@@ -36,6 +41,12 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+
+	// =================================================================================================================
+	// Public Methods - APawn Overrides
+	// =================================================================================================================
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_Controller() override;
 
 protected:
 	// =================================================================================================================
@@ -61,7 +72,7 @@ protected:
 	 */
 	void MoveRight(float Value);
 
-	/** 
+	/**
 	 * Called via input to turn at a given rate.
 	 *
 	 * @param Rate
@@ -86,6 +97,17 @@ protected:
 	 * Handler for when a touch input stops.
 	 */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
+
+	/**
+	 * Loads default input action bindings from all of the granted, activatable abilities of this character.
+	 *
+	 * If this character has any abilities already bound to input, those bindings are cleared before the input is bound.
+	 * If the input bindings component is already wired-up to input for this character, the actions are bound to input
+	 * actions immediately.
+	 *
+	 * This should be called on the client whenever the abilities of the character have changed.
+	 */
+	void LoadInputActivatableAbilities();
 
 public:
 	// =================================================================================================================

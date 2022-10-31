@@ -1,0 +1,63 @@
+﻿@startuml
+
+autonumber
+
+group Side: Listen server and Dedicated server
+AGameModeBase -> APlayerController: Possess()
+APlayerController -> APlayerController: OnPossess()
+APlayerController -> AOpenPF2PlaygroundCharacterBase: PossessedBy()
+
+AOpenPF2PlaygroundCharacterBase -> AOpenPF2PlaygroundCharacterBase: LoadInputActivatableAbilities()
+AOpenPF2PlaygroundCharacterBase -> UPF2CommandBindingsComponent: ClearBindings()
+AOpenPF2PlaygroundCharacterBase -> UPF2CommandBindingsComponent: LoadAbilitiesFromCharacter()
+UPF2CommandBindingsComponent -> UAbilitySystemComponent: GetActivatableAbilities()
+loop for each ability
+UPF2CommandBindingsComponent -> IPF2GameplayAbilityInterface: GetDefaultInputActionMapping()
+IPF2GameplayAbilityInterface --> UPF2CommandBindingsComponent: Action name (String)
+UPF2CommandBindingsComponent -> FPF2CommandInputBinding: new()
+end
+APlayerController -> AOpenPF2PlaygroundCharacterBase: Set "Controller"
+
+group Side: Client
+AOpenPF2PlaygroundCharacterBase -> AOpenPF2PlaygroundCharacterBase: OnRep_Controller()
+AOpenPF2PlaygroundCharacterBase -> AOpenPF2PlaygroundCharacterBase: LoadInputActivatableAbilities()
+AOpenPF2PlaygroundCharacterBase -> UPF2CommandBindingsComponent: ClearBindings()
+AOpenPF2PlaygroundCharacterBase -> UPF2CommandBindingsComponent: LoadAbilitiesFromCharacter()
+UPF2CommandBindingsComponent -> UAbilitySystemComponent: GetActivatableAbilities()
+loop for each ability
+UPF2CommandBindingsComponent -> IPF2GameplayAbilityInterface: GetDefaultInputActionMapping()
+IPF2GameplayAbilityInterface --> UPF2CommandBindingsComponent: Action name (String)
+UPF2CommandBindingsComponent -> FPF2CommandInputBinding: new()
+end
+end
+
+APlayerController -> APlayerController: ClientRestart()
+
+group Side: Client
+APlayerController -> APawn: PawnClientRestart()
+APawn -> AOpenPF2PlaygroundCharacterBase: SetupPlayerInputComponent()
+AOpenPF2PlaygroundCharacterBase -> UPF2CommandBindingsComponent: ConnectToInput()
+loop for each FPF2CommandInputBinding
+UPF2CommandBindingsComponent -> FPF2CommandInputBinding: ConnectToInput()
+FPF2CommandInputBinding -> FPF2CommandInputBinding: AddActionBinding()
+FPF2CommandInputBinding -> FInputActionBinding: new()
+FPF2CommandInputBinding -> UInputComponent: AddActionBinding()
+UInputComponent --> FPF2CommandInputBinding: Binding handle (int32)
+end
+end
+end
+
+group Side: Client
+UInputComponent -> FPF2CommandInputBinding: LocalInputPressed()
+FPF2CommandInputBinding -> FPF2CommandInputBinding: InvokeAbility()
+FPF2CommandInputBinding -> UPF2CommandBindingsComponent: ExecuteBoundAbility()
+
+group Side: Listen server and Dedicated server
+UPF2CommandBindingsComponent -> APF2CharacterCommand: Create()
+UPF2CommandBindingsComponent -> APF2CharacterCommand: AttemptExecuteOrQueue()
+end
+
+UInputComponent -> FPF2CommandInputBinding: LocalInputReleased()
+FPF2CommandInputBinding -> FPF2CommandInputBinding: ReleaseAbility()
+end
+@enduml

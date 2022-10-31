@@ -1,0 +1,56 @@
+﻿@startuml
+
+autonumber
+
+UInputComponent -> FPF2CommandInputBinding: LocalInputPressed(binding)
+
+participant "attackBinding: FPF2CommandInputBinding" as binding
+
+FPF2CommandInputBinding -> binding: ActivateAbility()
+binding -> UPF2CommandBindingsComponent: ExecuteBoundAbility(AbilitySpecHandle = GA_Attack_XYZ, character)
+
+participant "character: IPF2CharacterInterface" as character
+participant "playerController: IPF2PlayerControllerInterface" as playerController
+
+UPF2CommandBindingsComponent -> character: GetPlayerController()
+character --> UPF2CommandBindingsComponent: playerController
+
+UPF2CommandBindingsComponent -> playerController: Server_ExecuteCharacterCommand(AbilitySpecHandle = GA_Attack_XYZ, character)
+
+participant "PF2CharacterCommand" as CharacterCommandStatic << Class >>
+participant "command: PF2CharacterCommand" as CharacterCommandInstance << Instance >>
+
+playerController -> CharacterCommandStatic: Create(GameplayAbility = GA_Attack_TwinBlast_FireGun)
+CharacterCommandStatic -> World: SpawnActor<CharacterCommand>();
+World -> CharacterCommandInstance: new()
+World --> CharacterCommandStatic: command
+CharacterCommandStatic --> playerController: command
+
+playerController -> CharacterCommandInstance: AttemptExecuteOrQueue()
+CharacterCommandInstance -> IPF2GameModeInterface: AttemptToExecuteOrQueueCommand(command)
+IPF2GameModeInterface -> IPF2ModeOfPlayRuleSetInterface: AttemptToExecuteOrQueueCommand(command)
+group Behavior Depends on MoPRS Blueprint
+IPF2ModeOfPlayRuleSetInterface -> UPF2CommandQueueComponent: Enqueue(command)
+IPF2ModeOfPlayRuleSetInterface --> IPF2GameModeInterface: EPF2CommandExecuteOrQueueResult::Queued
+end
+IPF2GameModeInterface --> CharacterCommandInstance: EPF2CommandExecuteOrQueueResult::Queued
+
+UInputComponent -> FPF2CommandInputBinding: LocalInputReleased(binding)
+FPF2CommandInputBinding -> binding: DeactivateAbility()
+
+group Invoked Later by MoPRS Blueprint
+IPF2ModeOfPlayRuleSetInterface -> IPF2ModeOfPlayRuleSetInterface: ExecuteNextQueuedCommandForCharacter(character)
+end
+IPF2ModeOfPlayRuleSetInterface -> UPF2CommandQueueComponent: PopAndExecuteNext()
+UPF2CommandQueueComponent -> CharacterCommandInstance: AttemptExecuteImmediately()
+
+participant "asc: UAbilitySystemComponent" as AscInstance
+CharacterCommandInstance -> character: GetAbilitySystemComponent()
+character --> CharacterCommandInstance: asc
+
+CharacterCommandInstance -> AscInstance: TryActivateAbility(AbilitySpecHandle = GA_Attack_XYZ)
+AscInstance --> CharacterCommandInstance: true
+CharacterCommandInstance --> UPF2CommandQueueComponent: EPF2AbilityActivationResult::Activated
+UPF2CommandQueueComponent --> IPF2ModeOfPlayRuleSetInterface: EPF2AbilityActivationResult::Activated
+
+@enduml
