@@ -34,10 +34,10 @@ public:
 	 * actions immediately.
 	 *
 	 * On the client side, this should be invoked by the player controller whenever the abilities of this character may
-	 * have changed. At a minimum, this must be invoked when a character is being possessed by a player controller.
-	 * This is a responsibility of the player controller rather than the character itself because it is only appropriate
-	 * when a character is being possessed by a controller that processes input (i.e., it would not apply when a
-	 * character is possessed by an AI controller).
+	 * have changed. At a minimum, this must be invoked when a player is taking control of a character. This is a
+	 * responsibility of the player controller taking ownership rather than the character being owned because it is only
+	 * appropriate when a character is owned by a controller that processes input (i.e., it would not apply when a
+	 * character is possessed/controlled by an AI controller).
 	 */
 	virtual void LoadInputActionBindings() = 0;
 
