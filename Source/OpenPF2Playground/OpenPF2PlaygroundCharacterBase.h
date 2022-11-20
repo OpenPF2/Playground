@@ -1,115 +1,79 @@
-// Copyright 2021 Guy Elsmore-Paddock. All Rights Reserved.
+// Copyright 2021-2022 Guy Elsmore-Paddock. All Rights Reserved.
 // Adapted from content that is Copyright Epic Games, Inc. (Third Person Sample).
 // Licensed only for use with Unreal Engine.
 
 #pragma once
 
-#include "PF2CharacterBase.h"
+#include <Camera/CameraComponent.h>
 
+#include <GameFramework/SpringArmComponent.h>
+
+#include "InputBindableCharacterInterface.h"
+#include "PF2CharacterBase.h"
 #include "OpenPF2PlaygroundCharacterBase.generated.h"
 
+// =====================================================================================================================
+// Forward Declarations (to break recursive dependencies)
+// =====================================================================================================================
+class UPF2CommandBindingsComponent;
+
+// =====================================================================================================================
+// Normal Declarations
+// =====================================================================================================================
 /**
  * Base class for all characters in the OpenPF2 Playground sample.
  */
 UCLASS(Config=Game)
 // ReSharper disable once CppClassCanBeFinal
-class AOpenPF2PlaygroundCharacterBase : public APF2CharacterBase
+class AOpenPF2PlaygroundCharacterBase : public APF2CharacterBase, public IInputBindableCharacterInterface
 {
 	GENERATED_BODY()
 
-	/** Camera boom positioning the camera behind the character */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
-
-	/** Follow camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* FollowCamera;
+protected:
+	/**
+	 * Camera boom positioning the camera behind the character.
+	 */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	USpringArmComponent* CameraBoom;
 
 	/**
-	 * Component for granting abilities to the character that are bound to input.
+	 * Camera that follows the player in third-person when outside of encounters.
 	 */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UPF2CommandBindingsComponent* AbilityBindings;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	UCameraComponent* FollowCamera;
 
-public:
-	AOpenPF2PlaygroundCharacterBase();
+	/**
+	 * Component that enables character abilities to be bound to input in a dynamic/configurable way at run-time.
+	 */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	UPF2CommandBindingsComponent* AbilityBindings;
 
-	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
+	/**
+	 * Base turn rate, in deg/sec. Other scaling may affect final turn rate.
+	 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
 
-	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
+	/**
+	 * Base look up/down rate, in deg/sec. Other scaling may affect final rate.
+	 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
-	// =================================================================================================================
-	// Public Methods - APawn Overrides
-	// =================================================================================================================
-	virtual void PossessedBy(AController* NewController) override;
-	virtual void OnRep_Controller() override;
-
-protected:
-	// =================================================================================================================
-	// Protected Methods - APawn Overrides
-	// =================================================================================================================
-	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-
-	// =================================================================================================================
-	// Protected Methods
-	// =================================================================================================================
-	/**
-	 * Resets HMD orientation in VR.
-	 */
-	void OnResetVR();
-
-	/**
-	 * Called for forwards/backward input.
-	 */
-	void MoveForward(float Value);
-
-	/**
-	 * Called for side to side, strafing input.
-	 */
-	void MoveRight(float Value);
-
-	/**
-	 * Called via input to turn at a given rate.
-	 *
-	 * @param Rate
-	 *	The normalized rate of turn (i.e., 1.0 means 100% of desired turn rate).
-	 */
-	void TurnAtRate(float Rate);
-
-	/**
-	 * Called via input to turn look up/down at a given rate.
-	 *
-	 * @param Rate
-	 *	The normalized rate of turn (i.e., 1.0 means 100% of desired turn rate).
-	 */
-	void LookUpAtRate(float Rate);
-
-	/**
-	 * Handler for when a touch input begins.
-	 */
-	void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
-
-	/**
-	 * Handler for when a touch input stops.
-	 */
-	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
-
-	/**
-	 * Loads default input action bindings from all of the granted, activatable abilities of this character.
-	 *
-	 * If this character has any abilities already bound to input, those bindings are cleared before the input is bound.
-	 * If the input bindings component is already wired-up to input for this character, the actions are bound to input
-	 * actions immediately.
-	 *
-	 * This should be called on the client whenever the abilities of the character have changed.
-	 */
-	void LoadInputActivatableAbilities();
-
 public:
+	/**
+	 * Constructs a new instance.
+	 */
+	AOpenPF2PlaygroundCharacterBase();
+
+	// =================================================================================================================
+	// Public Methods - IInputBindableCharacterInterface Implementation
+	// =================================================================================================================
+	UFUNCTION()
+	virtual void LoadInputActionBindings() override;
+
+	virtual void SetupClientAbilityChangeListener() override;
+
 	// =================================================================================================================
 	// Public Methods
 	// =================================================================================================================
@@ -119,7 +83,7 @@ public:
 	 * @return
 	 *	The camera boom.
 	 */
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const
+	FORCEINLINE USpringArmComponent* GetCameraBoom() const
 	{
 		return this->CameraBoom;
 	}
@@ -132,8 +96,58 @@ public:
 	 * @return
 	 *	The camera.
 	 */
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const
+	FORCEINLINE UCameraComponent* GetFollowCamera() const
 	{
 		return this->FollowCamera;
 	}
+
+protected:
+	// =================================================================================================================
+	// Protected Methods - APawn Overrides
+	// =================================================================================================================
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
+	// =================================================================================================================
+	// Protected Native Event Callbacks
+	// =================================================================================================================
+	/**
+	 * Called for forwards/backward input.
+	 */
+	void Native_OnMoveForwardBack(float Value);
+
+	/**
+	 * Called for side to side, strafing input.
+	 */
+	void Native_OnMoveRightLeft(float Value);
+
+	/**
+	 * Called via input to turn at a given rate.
+	 *
+	 * @param Rate
+	 *	The normalized rate of turn (i.e., 1.0 means 100% of desired turn rate).
+	 */
+	void Native_OnTurnAtRate(float Rate);
+
+	/**
+	 * Called via input to turn look up/down at a given rate.
+	 *
+	 * @param Rate
+	 *	The normalized rate of turn (i.e., 1.0 means 100% of desired turn rate).
+	 */
+	void Native_OnLookUpAtRate(float Rate);
+
+	/**
+	 * Handler for when a touch input begins.
+	 */
+	void Native_OnTouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
+
+	/**
+	 * Handler for when a touch input stops.
+	 */
+	void Native_OnTouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
+
+	/**
+	 * Resets HMD orientation in VR.
+	 */
+	void Native_OnResetVR();
 };

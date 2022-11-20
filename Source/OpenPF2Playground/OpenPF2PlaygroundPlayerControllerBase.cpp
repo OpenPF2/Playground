@@ -5,6 +5,9 @@
 
 #include "OpenPF2PlaygroundPlayerControllerBase.h"
 
+#include "InputBindableCharacterInterface.h"
+#include "PF2CharacterInterface.h"
+
 void AOpenPF2PlaygroundPlayerControllerBase::SetupInputComponent()
 {
 	Super::SetupInputComponent();
@@ -15,4 +18,27 @@ void AOpenPF2PlaygroundPlayerControllerBase::SetupInputComponent()
 	this->ControlledCharacterInputComponent->RegisterComponent();
 
 	this->PushInputComponent(this->ControlledCharacterInputComponent);
+}
+
+void AOpenPF2PlaygroundPlayerControllerBase::Native_OnCharacterGiven(
+	const TScriptInterface<IPF2CharacterInterface>& GivenCharacter)
+{
+	Super::Native_OnCharacterGiven(GivenCharacter);
+	this->AcknowledgeOwnership(GivenCharacter);
+}
+
+void AOpenPF2PlaygroundPlayerControllerBase::AcknowledgeOwnership(
+	const TScriptInterface<IPF2CharacterInterface> InCharacter) const
+{
+	IInputBindableCharacterInterface* BindableCharacterIntf =
+		Cast<IInputBindableCharacterInterface>(InCharacter.GetObject());
+
+	// Ensure the ASC has been initialized.
+	InCharacter->InitializeOrRefreshAbilities();
+
+	if (BindableCharacterIntf != nullptr)
+	{
+		BindableCharacterIntf->LoadInputActionBindings();
+		BindableCharacterIntf->SetupClientAbilityChangeListener();
+	}
 }
