@@ -61,7 +61,7 @@ AOpenPF2PlaygroundCharacterBase::AOpenPF2PlaygroundCharacterBase()
 	// Camera does not rotate relative to arm
 	FollowCameraComponent->bUsePawnControlRotation = false;
 
-	FollowCamera = FollowCameraComponent;
+	this->FollowCamera = FollowCameraComponent;
 
 	// Create the component that allows binding abilities to input actions.
 	UPF2CommandBindingsComponent* BindingsComponent =
