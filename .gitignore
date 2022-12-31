@@ -12,4 +12,5 @@ Saved
 *.suo
 *.xcodeproj
 *.xcworkspace
+Plugins/UEGitPlugin
 Plugins/UEGitPlugin-3.03
