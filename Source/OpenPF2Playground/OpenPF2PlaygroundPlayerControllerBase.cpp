@@ -59,10 +59,18 @@ void AOpenPF2PlaygroundPlayerControllerBase::SetupInputComponent()
 		//	- "Turn" handles devices that provide an absolute delta, such as a mouse.
 		//	- "TurnRate" is for devices that we choose to treat as a rate of change, such as an analog joystick.
 		Input->BindAxis("Turn", this, &AOpenPF2PlaygroundPlayerControllerBase::Native_OnTurn);
-		Input->BindAxis("TurnRate", this, &AOpenPF2PlaygroundPlayerControllerBase::Native_OnTurnAtRate);
+		this->BindAxisWithPassthrough<AOpenPF2PlaygroundPlayerControllerBase>(
+			Input,
+			"TurnRate",
+			&AOpenPF2PlaygroundPlayerControllerBase::Native_OnTurnAtRate
+		);
 
 		Input->BindAxis("LookUp", this, &AOpenPF2PlaygroundPlayerControllerBase::Native_OnLookUp);
-		Input->BindAxis("LookUpRate", this, &AOpenPF2PlaygroundPlayerControllerBase::Native_OnLookUpAtRate);
+		this->BindAxisWithPassthrough<AOpenPF2PlaygroundPlayerControllerBase>(
+			Input,
+			"LookUpRate",
+			&AOpenPF2PlaygroundPlayerControllerBase::Native_OnLookUpAtRate
+		);
 
 		// handle touch devices
 		Input->BindTouch(IE_Pressed, this, &AOpenPF2PlaygroundPlayerControllerBase::Native_OnTouchStarted);
