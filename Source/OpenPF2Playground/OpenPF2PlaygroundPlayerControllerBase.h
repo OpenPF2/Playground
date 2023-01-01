@@ -109,6 +109,47 @@ protected:
 		return Binding;
 	}
 
+	/**
+	 * Performs a collision query on a trace channel using a specific point in screen space.
+	 *
+	 * The upper-left corner of the screen is (0, 0). Positive X numbers move further right, while positive Y numbers
+	 * move further down.
+	 *
+	 * @param InPosition
+	 *	The position to project into the game world.
+	 * @param InTraceChannel
+	 *	The channel on which to perform the trace.
+	 * @param bInTraceComplex
+	 *	Whether to perform the trace against complex collision or simple collision.
+	 * @param OutHitResult
+	 *	The hit result.
+	 *
+	 * @return
+	 *	Whether the collision trace was successful (intersected world geometry).
+	 */
+	UFUNCTION(BlueprintCallable, Category="OpenPF2 Playground|Player Controllers", meta=(bInTraceComplex=true))
+	bool GetHitResultForScreenPosition(
+		UPARAM(DisplayName="Position")
+		const FVector2D InPosition,
+
+		UPARAM(DisplayName="Trace Channel")
+		const ECollisionChannel InTraceChannel,
+
+		UPARAM(DisplayName="Trace Complex")
+		const bool bInTraceComplex,
+
+		UPARAM(DisplayName="Hit Result")
+		FHitResult& OutHitResult) const;
+
+	/**
+	 * Gets a vector representing the position (in pixels) of the center of the game viewport.
+	 *
+	 * @return
+	 *	A vector representing the center of the screen.
+	 */
+	UFUNCTION(BlueprintCallable, Category="OpenPF2 Playground|Player Controllers")
+	FVector2D GetCenterOfViewport() const;
+
 	// =================================================================================================================
 	// Protected Native Event Callbacks
 	// =================================================================================================================

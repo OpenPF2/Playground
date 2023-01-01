@@ -97,6 +97,43 @@ void AOpenPF2PlaygroundPlayerControllerBase::AcknowledgeOwnership(
 	}
 }
 
+bool AOpenPF2PlaygroundPlayerControllerBase::GetHitResultForScreenPosition(const FVector2D         InPosition,
+                                                                           const ECollisionChannel InTraceChannel,
+                                                                           const bool              bInTraceComplex,
+                                                                           FHitResult&             OutHitResult) const
+{
+	const bool bHit = this->GetHitResultAtScreenPosition(InPosition, InTraceChannel, bInTraceComplex, OutHitResult);
+
+	if (!bHit)
+	{
+		// If there was no hit we reset the results. This is redundant but helps Blueprint users
+		OutHitResult = FHitResult();
+	}
+
+	return bHit;
+}
+
+FVector2D AOpenPF2PlaygroundPlayerControllerBase::GetCenterOfViewport() const
+{
+	FVector2D                  CenterPosition;
+	const ULocalPlayer*        LocalPlayer    = this->GetLocalPlayer();
+	const UGameViewportClient* ViewportClient = LocalPlayer->ViewportClient;
+
+	if ((LocalPlayer != nullptr) && (ViewportClient != nullptr))
+	{
+		FVector2D ViewportSize;
+
+		ViewportClient->GetViewportSize(ViewportSize);
+
+		CenterPosition = FVector2D(
+			ViewportSize.X / 2.0f,
+			ViewportSize.Y / 2.0f
+		);
+	}
+
+	return CenterPosition;
+}
+
 // ReSharper disable once CppMemberFunctionMayBeConst
 void AOpenPF2PlaygroundPlayerControllerBase::Native_OnJump()
 {
