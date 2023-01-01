@@ -79,7 +79,7 @@ protected:
 	 * @param InCharacter
 	 *	The character of which this player controller is taking ownership.
 	 */
-	UFUNCTION(BlueprintCallable, Category="OpenPF2 Playground|Characters")
+	UFUNCTION(BlueprintCallable, Category="OpenPF2 Playground|Player Controllers")
 	void AcknowledgeOwnership(TScriptInterface<IPF2CharacterInterface> InCharacter) const;
 
 	/**
