@@ -41,7 +41,7 @@ void AOpenPF2PlaygroundPlayerControllerBase::SetupInputComponent()
 		Input->BindAction("Jump", IE_Pressed, this, &AOpenPF2PlaygroundPlayerControllerBase::Native_OnJump);
 		Input->BindAction("Jump", IE_Released, this, &AOpenPF2PlaygroundPlayerControllerBase::Native_OnStopJumping);
 
-		// We do not consume input for these mappings so that the strategic camera pawn (flying camera) can handle
+		// We do not consume input for these mappings so that the bird's eye camera pawn (flying camera) can handle
 		// its own input, to give the player the ability to move the camera around.
 		this->BindAxisWithPassthrough<AOpenPF2PlaygroundPlayerControllerBase>(
 			Input,
