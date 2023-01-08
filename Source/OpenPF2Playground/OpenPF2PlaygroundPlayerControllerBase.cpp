@@ -142,6 +142,16 @@ FVector2D AOpenPF2PlaygroundPlayerControllerBase::GetCenterOfViewport() const
 	return CenterPosition;
 }
 
+void AOpenPF2PlaygroundPlayerControllerBase::DisableAutomaticCameraManagement()
+{
+	this->bAutoManageActiveCameraTarget = false;
+}
+
+void AOpenPF2PlaygroundPlayerControllerBase::EnableAutomaticCameraManagement()
+{
+	this->bAutoManageActiveCameraTarget = true;
+}
+
 // ReSharper disable once CppMemberFunctionMayBeConst
 void AOpenPF2PlaygroundPlayerControllerBase::Native_OnJump()
 {

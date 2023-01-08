@@ -150,6 +150,20 @@ protected:
 	UFUNCTION(BlueprintCallable, Category="OpenPF2 Playground|Player Controllers")
 	FVector2D GetCenterOfViewport() const;
 
+	/**
+	 * Stop this player controller from managing the camera target during the possession of pawns.
+	 *
+	 * This allows camera targets to be managed manually.
+	 */
+	UFUNCTION(BlueprintCallable, Category="OpenPF2 Playground|Player Controllers")
+	void DisableAutomaticCameraManagement();
+
+	/**
+	 * Resume having this player controller manage the camera target during the possession of pawns.
+	 */
+	UFUNCTION(BlueprintCallable, Category="OpenPF2 Playground|Player Controllers")
+	void EnableAutomaticCameraManagement();
+
 	// =================================================================================================================
 	// Protected Native Event Callbacks
 	// =================================================================================================================
