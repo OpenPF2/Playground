@@ -1,4 +1,4 @@
-﻿// OpenPF2 for UE Game Logic, Copyright 2022, Guy Elsmore-Paddock. All Rights Reserved.
+﻿// OpenPF2 for UE Game Logic, Copyright 2022-2023, Guy Elsmore-Paddock. All Rights Reserved.
 //
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 // distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -155,14 +155,14 @@ protected:
 	 *
 	 * This allows camera targets to be managed manually.
 	 */
-	UFUNCTION(BlueprintCallable, Category="OpenPF2 Playground|Player Controllers")
-	void DisableAutomaticCameraManagement();
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, Category="OpenPF2 Playground|Player Controllers")
+	void Multicast_DisableAutomaticCameraManagement();
 
 	/**
 	 * Resume having this player controller manage the camera target during the possession of pawns.
 	 */
-	UFUNCTION(BlueprintCallable, Category="OpenPF2 Playground|Player Controllers")
-	void EnableAutomaticCameraManagement();
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, Category="OpenPF2 Playground|Player Controllers")
+	void Multicast_EnableAutomaticCameraManagement();
 
 	// =================================================================================================================
 	// Protected Native Event Callbacks
