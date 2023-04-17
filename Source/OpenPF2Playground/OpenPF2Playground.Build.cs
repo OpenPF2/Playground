@@ -23,6 +23,7 @@ public class OpenPF2Playground : ModuleRules
 		PrivateDependencyModuleNames.AddRange(new string[]
 		{
 			"OpenPF2Core",
+			"GameplayAbilities"
 		});
 	}
 }

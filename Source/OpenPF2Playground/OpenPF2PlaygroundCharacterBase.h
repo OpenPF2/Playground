@@ -13,7 +13,7 @@
 #include "OpenPF2PlaygroundCharacterBase.generated.h"
 
 // =====================================================================================================================
-// Forward Declarations (to break recursive dependencies)
+// Forward Declarations (to minimize header dependencies)
 // =====================================================================================================================
 class UPF2CommandBindingsComponent;
 
@@ -47,18 +47,6 @@ protected:
 	 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	UPF2CommandBindingsComponent* AbilityBindings;
-
-	/**
-	 * Base turn rate, in deg/sec. Other scaling may affect final turn rate.
-	 */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseTurnRate;
-
-	/**
-	 * Base look up/down rate, in deg/sec. Other scaling may affect final rate.
-	 */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseLookUpRate;
 
 public:
 	/**
@@ -106,48 +94,4 @@ protected:
 	// Protected Methods - APawn Overrides
 	// =================================================================================================================
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-
-	// =================================================================================================================
-	// Protected Native Event Callbacks
-	// =================================================================================================================
-	/**
-	 * Called for forwards/backward input.
-	 */
-	void Native_OnMoveForwardBack(float Value);
-
-	/**
-	 * Called for side to side, strafing input.
-	 */
-	void Native_OnMoveRightLeft(float Value);
-
-	/**
-	 * Called via input to turn at a given rate.
-	 *
-	 * @param Rate
-	 *	The normalized rate of turn (i.e., 1.0 means 100% of desired turn rate).
-	 */
-	void Native_OnTurnAtRate(float Rate);
-
-	/**
-	 * Called via input to turn look up/down at a given rate.
-	 *
-	 * @param Rate
-	 *	The normalized rate of turn (i.e., 1.0 means 100% of desired turn rate).
-	 */
-	void Native_OnLookUpAtRate(float Rate);
-
-	/**
-	 * Handler for when a touch input begins.
-	 */
-	void Native_OnTouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
-
-	/**
-	 * Handler for when a touch input stops.
-	 */
-	void Native_OnTouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
-
-	/**
-	 * Resets HMD orientation in VR.
-	 */
-	void Native_OnResetVR();
 };

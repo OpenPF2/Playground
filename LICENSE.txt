@@ -46,6 +46,8 @@ Attribution 3.0 Unported (CC BY 3.0) license
   https://thenounproject.com/icon/gun-1036548/
 - T_Attack_Greystone_Sword: "Sword" by Suncheli Project from NounProject.com
   https://thenounproject.com/icon/sword-4992493/
+- T_Move_Walk: "foot" by Aleksandr Vector from NounProject.com
+  https://thenounproject.com/icon/foot-1009059/
 
 Depending on the needs of your project, you may wish to license these materials
 through a commercial, royalty-free license from the Noun Project or replace them
