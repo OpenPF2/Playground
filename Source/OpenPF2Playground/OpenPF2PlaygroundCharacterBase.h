@@ -15,7 +15,7 @@
 // =====================================================================================================================
 // Forward Declarations (to minimize header dependencies)
 // =====================================================================================================================
-class UPF2CommandBindingsComponent;
+class UPF2AbilityBindingsComponent;
 
 // =====================================================================================================================
 // Normal Declarations
@@ -46,7 +46,7 @@ protected:
 	 * Component that enables character abilities to be bound to input in a dynamic/configurable way at run-time.
 	 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	UPF2CommandBindingsComponent* AbilityBindings;
+	UPF2AbilityBindingsComponent* AbilityBindings;
 
 public:
 	/**

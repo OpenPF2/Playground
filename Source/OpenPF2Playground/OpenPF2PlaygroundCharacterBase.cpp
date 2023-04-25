@@ -1,4 +1,4 @@
-// Copyright 2021-2022 Guy Elsmore-Paddock. All Rights Reserved.
+// Copyright 2021-2023 Guy Elsmore-Paddock. All Rights Reserved.
 // Adapted from content that is Copyright Epic Games, Inc. (Third Person Sample)
 // Licensed only for use with Unreal Engine.
 
@@ -15,7 +15,7 @@
 
 #include "OpenPF2Playground.h"
 
-#include "Commands/PF2CommandBindingsComponent.h"
+#include "Commands/PF2AbilityBindingsComponent.h"
 
 #include "Utilities/PF2LogUtilities.h"
 
@@ -58,8 +58,8 @@ AOpenPF2PlaygroundCharacterBase::AOpenPF2PlaygroundCharacterBase()
 	this->FollowCamera = FollowCameraComponent;
 
 	// Create the component that allows binding abilities to input actions.
-	UPF2CommandBindingsComponent* BindingsComponent =
-		CreateDefaultSubobject<UPF2CommandBindingsComponent>("AbilityBindings");
+	UPF2AbilityBindingsComponent* BindingsComponent =
+		CreateDefaultSubobject<UPF2AbilityBindingsComponent>("AbilityBindings");
 
 	// Allow Player Controller or Character to still react to bound inputs.
 	BindingsComponent->SetConsumeInput(false);
