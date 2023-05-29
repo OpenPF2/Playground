@@ -57,8 +57,8 @@ public:
 	// =================================================================================================================
 	// Public Methods - IInputBindableCharacterInterface Implementation
 	// =================================================================================================================
-	UFUNCTION()
-	virtual void LoadInputActionBindings() override;
+	UFUNCTION(BlueprintCallable)
+	virtual void LoadInputAbilityBindings() override;
 
 	virtual void SetupClientAbilityChangeListener() override;
 

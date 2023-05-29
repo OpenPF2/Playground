@@ -70,7 +70,7 @@ AOpenPF2PlaygroundCharacterBase::AOpenPF2PlaygroundCharacterBase()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
 
-void AOpenPF2PlaygroundCharacterBase::LoadInputActionBindings()
+void AOpenPF2PlaygroundCharacterBase::LoadInputAbilityBindings()
 {
 	UE_LOG(
 		LogPf2PlaygroundInput,
@@ -106,7 +106,7 @@ void AOpenPF2PlaygroundCharacterBase::SetupClientAbilityChangeListener()
 	{
 		Asc->GetClientAbilityChangeDelegate()->AddUniqueDynamic(
 			this,
-			&AOpenPF2PlaygroundCharacterBase::LoadInputActionBindings
+			&AOpenPF2PlaygroundCharacterBase::LoadInputAbilityBindings
 		);
 	}
 }

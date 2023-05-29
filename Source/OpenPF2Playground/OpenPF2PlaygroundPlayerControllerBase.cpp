@@ -100,7 +100,7 @@ void AOpenPF2PlaygroundPlayerControllerBase::AcknowledgeOwnership(
 
 	if (BindableCharacterIntf != nullptr)
 	{
-		BindableCharacterIntf->LoadInputActionBindings();
+		BindableCharacterIntf->LoadInputAbilityBindings();
 		BindableCharacterIntf->SetupClientAbilityChangeListener();
 	}
 }

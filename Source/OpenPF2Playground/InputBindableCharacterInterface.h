@@ -1,4 +1,4 @@
-﻿// OpenPF2 for UE Game Logic, Copyright 2022, Guy Elsmore-Paddock. All Rights Reserved.
+﻿// OpenPF2 for UE Game Logic, Copyright 2022-2023, Guy Elsmore-Paddock. All Rights Reserved.
 //
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 // distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -39,7 +39,8 @@ public:
 	 * appropriate when a character is owned by a controller that processes input (i.e., it would not apply when a
 	 * character is possessed/controlled by an AI controller).
 	 */
-	virtual void LoadInputActionBindings() = 0;
+	UFUNCTION(BlueprintCallable, Category="OpenPF2|Characters|Ability Bindings")
+	virtual void LoadInputAbilityBindings() = 0;
 
 	/**
 	 * Configures this character to refresh action bindings whenever abilities in the character's ASC change locally.
