@@ -10,6 +10,11 @@
 #include "InputBindableCharacterInterface.generated.h"
 
 // =====================================================================================================================
+// Forward Declarations (to minimize header dependencies)
+// =====================================================================================================================
+class IPF2AbilityBindingsInterface;
+
+// =====================================================================================================================
 // Normal Declarations
 // =====================================================================================================================
 UINTERFACE(MinimalAPI, BlueprintType, meta=(CannotImplementInterfaceInBlueprint))
@@ -51,4 +56,13 @@ public:
 	 *   - The character has already setup an ability change listener on this client.
 	 */
 	virtual void SetupClientAbilityChangeListener() = 0;
+
+	/**
+	 * Gets the component that manages input to ability bindings for this character.
+	 *
+	 * @return
+	 *	The ability bindings component for this character.
+	 */
+	UFUNCTION(BlueprintCallable, Category="OpenPF2|Characters|Ability Bindings")
+	virtual TScriptInterface<IPF2AbilityBindingsInterface> GetAbilityBindingsComponent() const = 0;
 };

@@ -111,6 +111,11 @@ void AOpenPF2PlaygroundCharacterBase::SetupClientAbilityChangeListener()
 	}
 }
 
+TScriptInterface<IPF2AbilityBindingsInterface> AOpenPF2PlaygroundCharacterBase::GetAbilityBindingsComponent() const
+{
+	return this->AbilityBindings;
+}
+
 void AOpenPF2PlaygroundCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	this->AbilityBindings->ConnectToInput(PlayerInputComponent);

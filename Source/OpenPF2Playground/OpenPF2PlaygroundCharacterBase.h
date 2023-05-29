@@ -1,4 +1,4 @@
-// Copyright 2021-2022 Guy Elsmore-Paddock. All Rights Reserved.
+// Copyright 2021-2023 Guy Elsmore-Paddock. All Rights Reserved.
 // Adapted from content that is Copyright Epic Games, Inc. (Third Person Sample).
 // Licensed only for use with Unreal Engine.
 
@@ -61,6 +61,9 @@ public:
 	virtual void LoadInputAbilityBindings() override;
 
 	virtual void SetupClientAbilityChangeListener() override;
+
+	UFUNCTION(BlueprintCallable)
+	virtual TScriptInterface<IPF2AbilityBindingsInterface> GetAbilityBindingsComponent() const override;
 
 	// =================================================================================================================
 	// Public Methods
