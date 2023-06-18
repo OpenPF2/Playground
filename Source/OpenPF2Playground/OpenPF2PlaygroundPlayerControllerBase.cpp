@@ -35,12 +35,6 @@ void AOpenPF2PlaygroundPlayerControllerBase::SetupInputComponent()
 
 	if (Input != nullptr)
 	{
-		check(Input);
-
-		// Set up gameplay key bindings
-		Input->BindAction("Jump", IE_Pressed, this, &AOpenPF2PlaygroundPlayerControllerBase::Native_OnJump);
-		Input->BindAction("Jump", IE_Released, this, &AOpenPF2PlaygroundPlayerControllerBase::Native_OnStopJumping);
-
 		// We do not consume input for these mappings so that the bird's eye camera pawn (flying camera) can handle
 		// its own input, to give the player the ability to move the camera around.
 		this->BindAxisWithPassthrough<AOpenPF2PlaygroundPlayerControllerBase>(
@@ -71,10 +65,6 @@ void AOpenPF2PlaygroundPlayerControllerBase::SetupInputComponent()
 			"LookUpRate",
 			&AOpenPF2PlaygroundPlayerControllerBase::Native_OnLookUpAtRate
 		);
-
-		// handle touch devices
-		Input->BindTouch(IE_Pressed, this, &AOpenPF2PlaygroundPlayerControllerBase::Native_OnTouchStarted);
-		Input->BindTouch(IE_Released, this, &AOpenPF2PlaygroundPlayerControllerBase::Native_OnTouchStopped);
 
 		// VR headset functionality
 		Input->BindAction("ResetVR", IE_Pressed, this, &AOpenPF2PlaygroundPlayerControllerBase::Native_OnResetVR);
@@ -150,28 +140,6 @@ void AOpenPF2PlaygroundPlayerControllerBase::Multicast_DisableAutomaticCameraMan
 void AOpenPF2PlaygroundPlayerControllerBase::Multicast_EnableAutomaticCameraManagement_Implementation()
 {
 	this->bAutoManageActiveCameraTarget = true;
-}
-
-// ReSharper disable once CppMemberFunctionMayBeConst
-void AOpenPF2PlaygroundPlayerControllerBase::Native_OnJump()
-{
-	ACharacter* PossessedCharacter = this->GetCharacter();
-
-	if (PossessedCharacter != nullptr)
-	{
-		PossessedCharacter->Jump();
-	}
-}
-
-// ReSharper disable once CppMemberFunctionMayBeConst
-void AOpenPF2PlaygroundPlayerControllerBase::Native_OnStopJumping()
-{
-	ACharacter* PossessedCharacter = this->GetCharacter();
-
-	if (PossessedCharacter != nullptr)
-	{
-		PossessedCharacter->StopJumping();
-	}
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
@@ -255,16 +223,6 @@ void AOpenPF2PlaygroundPlayerControllerBase::Native_OnLookUpAtRate(const float R
 		// Calculate delta for this frame from the rate information
 		PossessedCharacter->AddControllerPitchInput(Rate * this->BaseLookUpRate * this->GetWorld()->GetDeltaSeconds());
 	}
-}
-
-void AOpenPF2PlaygroundPlayerControllerBase::Native_OnTouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
-{
-	this->Native_OnJump();
-}
-
-void AOpenPF2PlaygroundPlayerControllerBase::Native_OnTouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
-{
-	this->Native_OnStopJumping();
 }
 
 // ReSharper disable once CppMemberFunctionMayBeStatic

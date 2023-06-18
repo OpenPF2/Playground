@@ -168,16 +168,6 @@ protected:
 	// Protected Native Event Callbacks
 	// =================================================================================================================
 	/**
-	 * Input callback for making the character jump.
-	 */
-	void Native_OnJump();
-
-	/**
-	 * Input callback for making the character stop jumping.
-	 */
-	void Native_OnStopJumping();
-
-	/**
 	 * Input callback for forward and backward movement.
 	 *
 	 * @param Value
@@ -232,26 +222,6 @@ protected:
 	 *	The normalized rate of turn (i.e., 1.0 means 100% of desired turn rate) for moving the camera up or down.
 	 */
 	void Native_OnLookUpAtRate(float Rate);
-
-	/**
-	 * Input callback for the start of a touch input.
-	 *
-	 * @param FingerIndex
-	 *	Which finger touched the screen.
-	 * @param Location
-	 *	Where on the screen the finger touched the screen.
-	 */
-	void Native_OnTouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
-
-	/**
-	 * Input callback for the end of a touch input.
-	 *
-	 * @param FingerIndex
-	 *	Which finger touched the screen.
-	 * @param Location
-	 *	Where on the screen the finger touched the screen.
-	 */
-	void Native_OnTouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
 
 	/**
 	 * Input callback to reset HMD orientation in VR.
