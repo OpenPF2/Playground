@@ -4,6 +4,8 @@
 
 #include "OpenPF2PlaygroundCharacterBase.h"
 
+#include <EnhancedInputComponent.h>
+
 #include <Camera/CameraComponent.h>
 
 #include <Components/CapsuleComponent.h>
@@ -118,5 +120,9 @@ TScriptInterface<IPF2AbilityBindingsInterface> AOpenPF2PlaygroundCharacterBase::
 
 void AOpenPF2PlaygroundCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	this->AbilityBindings->ConnectToInput(PlayerInputComponent);
+	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+
+	check(PlayerInputComponent != nullptr);
+
+	this->AbilityBindings->ConnectToInput(EnhancedInputComponent);
 }
