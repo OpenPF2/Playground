@@ -63,9 +63,6 @@ AOpenPF2PlaygroundCharacterBase::AOpenPF2PlaygroundCharacterBase()
 	UPF2AbilityBindingsComponent* BindingsComponent =
 		CreateDefaultSubobject<UPF2AbilityBindingsComponent>("AbilityBindings");
 
-	// Allow Player Controller or Character to still react to bound inputs.
-	BindingsComponent->SetConsumeInput(false);
-
 	this->AbilityBindings = BindingsComponent;
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character)
