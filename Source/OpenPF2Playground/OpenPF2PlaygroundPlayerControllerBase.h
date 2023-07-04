@@ -41,12 +41,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
-	/**
-	 * An input component for directing player actions to whichever character is currently being controlled.
-	 */
-	UPROPERTY(BlueprintReadOnly)
-	UEnhancedInputComponent* ControlledCharacterInputComponent;
-
 public:
 	// =================================================================================================================
 	// Public Constructors
