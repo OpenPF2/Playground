@@ -50,9 +50,9 @@ protected:
 
 public:
 	/**
-	 * Constructs a new instance.
+	 * Default constructor.
 	 */
-	AOpenPF2PlaygroundCharacterBase();
+	explicit AOpenPF2PlaygroundCharacterBase();
 
 	// =================================================================================================================
 	// Public Methods - IInputBindableCharacterInterface Implementation
