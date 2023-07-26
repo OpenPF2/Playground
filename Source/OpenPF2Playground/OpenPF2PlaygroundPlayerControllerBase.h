@@ -50,6 +50,11 @@ public:
 	 */
 	explicit AOpenPF2PlaygroundPlayerControllerBase();
 
+	// =================================================================================================================
+	// Public Methods - APF2PlayerControllerBase Overrides
+	// =================================================================================================================
+	virtual void SetPawn(APawn* InPawn) override;
+
 protected:
 	// =================================================================================================================
 	// Protected Methods - APF2PlayerControllerBase Overrides

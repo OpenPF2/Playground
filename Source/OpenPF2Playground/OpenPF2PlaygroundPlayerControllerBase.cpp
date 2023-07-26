@@ -6,6 +6,7 @@
 #include "OpenPF2PlaygroundPlayerControllerBase.h"
 
 #include "InputBindableCharacterInterface.h"
+#include "PF2CharacterBase.h"
 #include "PF2CharacterInterface.h"
 
 AOpenPF2PlaygroundPlayerControllerBase::AOpenPF2PlaygroundPlayerControllerBase()
@@ -13,6 +14,27 @@ AOpenPF2PlaygroundPlayerControllerBase::AOpenPF2PlaygroundPlayerControllerBase()
 	// set our turn rates for input
 	this->BaseTurnRate   = 45.0f;
 	this->BaseLookUpRate = 45.0f;
+}
+
+void AOpenPF2PlaygroundPlayerControllerBase::SetPawn(APawn* InPawn)
+{
+	APF2CharacterBase*       OldCharacterIntf = Cast<APF2CharacterBase>(this->GetPawn());
+	const APF2CharacterBase* NewCharacterIntf = Cast<APF2CharacterBase>(InPawn);
+
+	Super::SetPawn(InPawn);
+
+	if ((OldCharacterIntf != nullptr) && (OldCharacterIntf != NewCharacterIntf))
+	{
+		const UWorld*  World        = this->GetWorld();
+		FTimerManager& TimerManager = World->GetTimerManager();
+
+		// BUGBUG (UE-78453): There is a delay in replicating controller ownership changes to clients. So, if we refresh
+		// the ASC during the same frame as the ownership change happens, the client will tend to cache the old
+		// controller as the current controller of the old character even though it's not. This breaks execution of
+		// abilities and montages, so as a workaround we schedule the ASC to be updated during the next frame after
+		// replication has happened.
+		TimerManager.SetTimerForNextTick(OldCharacterIntf, &APF2CharacterBase::InitializeOrRefreshAbilities);
+	}
 }
 
 void AOpenPF2PlaygroundPlayerControllerBase::Native_OnCharacterGiven(
@@ -29,7 +51,7 @@ void AOpenPF2PlaygroundPlayerControllerBase::AcknowledgeOwnership(
 	IInputBindableCharacterInterface* BindableCharacterIntf =
 		Cast<IInputBindableCharacterInterface>(InCharacter.GetObject());
 
-	// Ensure the ASC has been initialized.
+	// Ensure the ASC has been initialized on the server.
 	InCharacter->InitializeOrRefreshAbilities();
 
 	if (BindableCharacterIntf != nullptr)
