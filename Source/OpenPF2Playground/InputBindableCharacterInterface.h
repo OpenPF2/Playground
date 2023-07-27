@@ -1,4 +1,4 @@
-﻿// OpenPF2 for UE Game Logic, Copyright 2022, Guy Elsmore-Paddock. All Rights Reserved.
+﻿// OpenPF2 for UE Game Logic, Copyright 2022-2023, Guy Elsmore-Paddock. All Rights Reserved.
 //
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 // distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,6 +8,11 @@
 #include <UObject/Interface.h>
 
 #include "InputBindableCharacterInterface.generated.h"
+
+// =====================================================================================================================
+// Forward Declarations (to minimize header dependencies)
+// =====================================================================================================================
+class IPF2AbilityBindingsInterface;
 
 // =====================================================================================================================
 // Normal Declarations
@@ -39,7 +44,8 @@ public:
 	 * appropriate when a character is owned by a controller that processes input (i.e., it would not apply when a
 	 * character is possessed/controlled by an AI controller).
 	 */
-	virtual void LoadInputActionBindings() = 0;
+	UFUNCTION(BlueprintCallable, Category="OpenPF2|Characters|Ability Bindings")
+	virtual void LoadInputAbilityBindings() = 0;
 
 	/**
 	 * Configures this character to refresh action bindings whenever abilities in the character's ASC change locally.
@@ -50,4 +56,13 @@ public:
 	 *   - The character has already setup an ability change listener on this client.
 	 */
 	virtual void SetupClientAbilityChangeListener() = 0;
+
+	/**
+	 * Gets the component that manages input to ability bindings for this character.
+	 *
+	 * @return
+	 *	The ability bindings component for this character.
+	 */
+	UFUNCTION(BlueprintCallable, Category="OpenPF2|Characters|Ability Bindings")
+	virtual TScriptInterface<IPF2AbilityBindingsInterface> GetAbilityBindingsComponent() const = 0;
 };

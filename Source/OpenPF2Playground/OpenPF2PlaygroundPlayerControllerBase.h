@@ -8,6 +8,14 @@
 #include "PF2PlayerControllerBase.h"
 #include "OpenPF2PlaygroundPlayerControllerBase.generated.h"
 
+// =====================================================================================================================
+// Forward Declarations (to minimize header dependencies)
+// =====================================================================================================================
+class UEnhancedInputComponent;
+
+// =====================================================================================================================
+// Normal Declarations
+// =====================================================================================================================
 /**
  * Base class for OpenPF2 Playground player controllers.
  */
@@ -33,12 +41,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
-	/**
-	 * An input component for directing player actions to whichever character is currently being controlled.
-	 */
-	UPROPERTY(BlueprintReadOnly)
-	UInputComponent* ControlledCharacterInputComponent;
-
 public:
 	// =================================================================================================================
 	// Public Constructors
@@ -48,12 +50,12 @@ public:
 	 */
 	explicit AOpenPF2PlaygroundPlayerControllerBase();
 
-protected:
 	// =================================================================================================================
-	// Protected Methods - APlayerController Overrides
+	// Public Methods - APF2PlayerControllerBase Overrides
 	// =================================================================================================================
-	virtual void SetupInputComponent() override;
+	virtual void SetPawn(APawn* InPawn) override;
 
+protected:
 	// =================================================================================================================
 	// Protected Methods - APF2PlayerControllerBase Overrides
 	// =================================================================================================================
@@ -81,33 +83,6 @@ protected:
 	 */
 	UFUNCTION(BlueprintCallable, Category="OpenPF2 Playground|Player Controllers")
 	void AcknowledgeOwnership(TScriptInterface<IPF2CharacterInterface> InCharacter) const;
-
-	/**
-	 * Binds the specified axis to the specified callback in a way that does not consume input after being invoked.
-	 *
-	 * @param Input
-	 *	The input component to which input will be bound.
-	 * @param AxisName
-	 *	The name of the input axis.
-	 * @param Func
-	 *	The callback to invoke when input is received.
-	 *
-	 * @return
-	 *	A reference to the binding for the axis. The reference is only guaranteed to be valid until another axis is
-	 *	bound.
-	 */
-	template<class UserClass>
-	FInputAxisBinding& BindAxisWithPassthrough(
-		UInputComponent* Input,
-		const FName AxisName,
-		const typename FInputAxisHandlerSignature::TUObjectMethodDelegate<UserClass>::FMethodPtr Func)
-	{
-		FInputAxisBinding& Binding = Input->BindAxis(AxisName, this, Func);
-
-		Binding.bConsumeInput = false;
-
-		return Binding;
-	}
 
 	/**
 	 * Performs a collision query on a trace channel using a specific point in screen space.
@@ -163,98 +138,4 @@ protected:
 	 */
 	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, Category="OpenPF2 Playground|Player Controllers")
 	void Multicast_EnableAutomaticCameraManagement();
-
-	// =================================================================================================================
-	// Protected Native Event Callbacks
-	// =================================================================================================================
-	/**
-	 * Input callback for making the character jump.
-	 */
-	void Native_OnJump();
-
-	/**
-	 * Input callback for making the character stop jumping.
-	 */
-	void Native_OnStopJumping();
-
-	/**
-	 * Input callback for forward and backward movement.
-	 *
-	 * @param Value
-	 *	The amount to move the character forward or backward.
-	 */
-	void Native_OnMoveForwardBack(float Value);
-
-	/**
-	 * Input callback for side-to-side, strafing movement.
-	 *
-	 * @param Value
-	 *	The amount to move the character right or left.
-	 */
-	void Native_OnMoveRightLeft(float Value);
-
-	/**
-	 * Input callback to turn the camera by a certain amount.
-	 *
-	 * This is used for devices that provide an absolute delta, such as a mouse.
-	 *
-	 * @param Value
-	 *	The amount to turn the camera left or right.
-	 */
-	void Native_OnTurn(float Value);
-
-	/**
-	 * Input callback to turn the camera at the given rate.
-	 *
-	 * This is used for devices that we choose to treat as a rate of change, such as an analog joystick.
-	 *
-	 * @param Rate
-	 *	The normalized rate of turn (i.e., 1.0 means 100% of desired turn rate) for moving the camera left or right.
-	 */
-	void Native_OnTurnAtRate(float Rate);
-
-	/**
-	 * Input callback to look the camera up or down by a certain amount.
-	 *
-	 * This is used for devices that provide an absolute delta, such as a mouse.
-	 *
-	 * @param Value
-	 *	The amount to turn the camera up or down.
-	 */
-	void Native_OnLookUp(float Value);
-
-	/**
-	 * Input callback to look up or down at the given rate.
-	 *
-	 * This is used for devices that we choose to treat as a rate of change, such as an analog joystick.
-	 *
-	 * @param Rate
-	 *	The normalized rate of turn (i.e., 1.0 means 100% of desired turn rate) for moving the camera up or down.
-	 */
-	void Native_OnLookUpAtRate(float Rate);
-
-	/**
-	 * Input callback for the start of a touch input.
-	 *
-	 * @param FingerIndex
-	 *	Which finger touched the screen.
-	 * @param Location
-	 *	Where on the screen the finger touched the screen.
-	 */
-	void Native_OnTouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
-
-	/**
-	 * Input callback for the end of a touch input.
-	 *
-	 * @param FingerIndex
-	 *	Which finger touched the screen.
-	 * @param Location
-	 *	Where on the screen the finger touched the screen.
-	 */
-	void Native_OnTouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
-
-	/**
-	 * Input callback to reset HMD orientation in VR.
-	 */
-	void Native_OnResetVR();
 };

@@ -5,11 +5,8 @@
 
 #include "OpenPF2PlaygroundPlayerControllerBase.h"
 
-#include <HeadMountedDisplayFunctionLibrary.h>
-
-#include <GameFramework/Character.h>
-
 #include "InputBindableCharacterInterface.h"
+#include "PF2CharacterBase.h"
 #include "PF2CharacterInterface.h"
 
 AOpenPF2PlaygroundPlayerControllerBase::AOpenPF2PlaygroundPlayerControllerBase()
@@ -19,65 +16,24 @@ AOpenPF2PlaygroundPlayerControllerBase::AOpenPF2PlaygroundPlayerControllerBase()
 	this->BaseLookUpRate = 45.0f;
 }
 
-void AOpenPF2PlaygroundPlayerControllerBase::SetupInputComponent()
+void AOpenPF2PlaygroundPlayerControllerBase::SetPawn(APawn* InPawn)
 {
-	UInputComponent* Input;
+	APF2CharacterBase*       OldCharacterIntf = Cast<APF2CharacterBase>(this->GetPawn());
+	const APF2CharacterBase* NewCharacterIntf = Cast<APF2CharacterBase>(InPawn);
 
-	Super::SetupInputComponent();
+	Super::SetPawn(InPawn);
 
-	Input = this->InputComponent;
-
-	this->ControlledCharacterInputComponent =
-		NewObject<UInputComponent>(this, UInputComponent::StaticClass(), TEXT("PC_ControlledCharacterInput"));
-
-	this->ControlledCharacterInputComponent->RegisterComponent();
-	this->PushInputComponent(this->ControlledCharacterInputComponent);
-
-	if (Input != nullptr)
+	if ((OldCharacterIntf != nullptr) && (OldCharacterIntf != NewCharacterIntf))
 	{
-		check(Input);
+		const UWorld*  World        = this->GetWorld();
+		FTimerManager& TimerManager = World->GetTimerManager();
 
-		// Set up gameplay key bindings
-		Input->BindAction("Jump", IE_Pressed, this, &AOpenPF2PlaygroundPlayerControllerBase::Native_OnJump);
-		Input->BindAction("Jump", IE_Released, this, &AOpenPF2PlaygroundPlayerControllerBase::Native_OnStopJumping);
-
-		// We do not consume input for these mappings so that the bird's eye camera pawn (flying camera) can handle
-		// its own input, to give the player the ability to move the camera around.
-		this->BindAxisWithPassthrough<AOpenPF2PlaygroundPlayerControllerBase>(
-			Input,
-			"MoveForwardBack",
-			&AOpenPF2PlaygroundPlayerControllerBase::Native_OnMoveForwardBack
-		);
-
-		this->BindAxisWithPassthrough<AOpenPF2PlaygroundPlayerControllerBase>(
-			Input,
-			"MoveRightLeft",
-			&AOpenPF2PlaygroundPlayerControllerBase::Native_OnMoveRightLeft
-		);
-
-		// We have 2 versions of the rotation bindings to handle two distinct kinds of devices:
-		//	- "Turn" handles devices that provide an absolute delta, such as a mouse.
-		//	- "TurnRate" is for devices that we choose to treat as a rate of change, such as an analog joystick.
-		Input->BindAxis("Turn", this, &AOpenPF2PlaygroundPlayerControllerBase::Native_OnTurn);
-		this->BindAxisWithPassthrough<AOpenPF2PlaygroundPlayerControllerBase>(
-			Input,
-			"TurnRate",
-			&AOpenPF2PlaygroundPlayerControllerBase::Native_OnTurnAtRate
-		);
-
-		Input->BindAxis("LookUp", this, &AOpenPF2PlaygroundPlayerControllerBase::Native_OnLookUp);
-		this->BindAxisWithPassthrough<AOpenPF2PlaygroundPlayerControllerBase>(
-			Input,
-			"LookUpRate",
-			&AOpenPF2PlaygroundPlayerControllerBase::Native_OnLookUpAtRate
-		);
-
-		// handle touch devices
-		Input->BindTouch(IE_Pressed, this, &AOpenPF2PlaygroundPlayerControllerBase::Native_OnTouchStarted);
-		Input->BindTouch(IE_Released, this, &AOpenPF2PlaygroundPlayerControllerBase::Native_OnTouchStopped);
-
-		// VR headset functionality
-		Input->BindAction("ResetVR", IE_Pressed, this, &AOpenPF2PlaygroundPlayerControllerBase::Native_OnResetVR);
+		// BUGBUG (UE-78453): There is a delay in replicating controller ownership changes to clients. So, if we refresh
+		// the ASC during the same frame as the ownership change happens, the client will tend to cache the old
+		// controller as the current controller of the old character even though it's not. This breaks execution of
+		// abilities and montages, so as a workaround we schedule the ASC to be updated during the next frame after
+		// replication has happened.
+		TimerManager.SetTimerForNextTick(OldCharacterIntf, &APF2CharacterBase::InitializeOrRefreshAbilities);
 	}
 }
 
@@ -95,12 +51,12 @@ void AOpenPF2PlaygroundPlayerControllerBase::AcknowledgeOwnership(
 	IInputBindableCharacterInterface* BindableCharacterIntf =
 		Cast<IInputBindableCharacterInterface>(InCharacter.GetObject());
 
-	// Ensure the ASC has been initialized.
+	// Ensure the ASC has been initialized on the server.
 	InCharacter->InitializeOrRefreshAbilities();
 
 	if (BindableCharacterIntf != nullptr)
 	{
-		BindableCharacterIntf->LoadInputActionBindings();
+		BindableCharacterIntf->LoadInputAbilityBindings();
 		BindableCharacterIntf->SetupClientAbilityChangeListener();
 	}
 }
@@ -150,125 +106,4 @@ void AOpenPF2PlaygroundPlayerControllerBase::Multicast_DisableAutomaticCameraMan
 void AOpenPF2PlaygroundPlayerControllerBase::Multicast_EnableAutomaticCameraManagement_Implementation()
 {
 	this->bAutoManageActiveCameraTarget = true;
-}
-
-// ReSharper disable once CppMemberFunctionMayBeConst
-void AOpenPF2PlaygroundPlayerControllerBase::Native_OnJump()
-{
-	ACharacter* PossessedCharacter = this->GetCharacter();
-
-	if (PossessedCharacter != nullptr)
-	{
-		PossessedCharacter->Jump();
-	}
-}
-
-// ReSharper disable once CppMemberFunctionMayBeConst
-void AOpenPF2PlaygroundPlayerControllerBase::Native_OnStopJumping()
-{
-	ACharacter* PossessedCharacter = this->GetCharacter();
-
-	if (PossessedCharacter != nullptr)
-	{
-		PossessedCharacter->StopJumping();
-	}
-}
-
-// ReSharper disable once CppMemberFunctionMayBeConst
-void AOpenPF2PlaygroundPlayerControllerBase::Native_OnMoveForwardBack(const float Value)
-{
-	ACharacter* PossessedCharacter = this->GetCharacter();
-
-	if ((PossessedCharacter != nullptr) && (Value != 0.0f))
-	{
-		// find out which way is forward
-		const FRotator Rotation = this->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		// get forward vector
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-
-		PossessedCharacter->AddMovementInput(Direction, Value);
-	}
-}
-
-// ReSharper disable once CppMemberFunctionMayBeConst
-void AOpenPF2PlaygroundPlayerControllerBase::Native_OnMoveRightLeft(const float Value)
-{
-	ACharacter* PossessedCharacter = this->GetCharacter();
-
-	if ((PossessedCharacter != nullptr) && (Value != 0.0f))
-	{
-		// find out which way is right
-		const FRotator Rotation = this->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		// get right vector
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
-		// add movement in that direction
-		PossessedCharacter->AddMovementInput(Direction, Value);
-	}
-}
-
-// ReSharper disable once CppMemberFunctionMayBeConst
-void AOpenPF2PlaygroundPlayerControllerBase::Native_OnTurn(const float Value)
-{
-	ACharacter* PossessedCharacter = this->GetCharacter();
-
-	if (PossessedCharacter != nullptr)
-	{
-		PossessedCharacter->AddControllerYawInput(Value);
-	}
-}
-
-// ReSharper disable once CppMemberFunctionMayBeConst
-void AOpenPF2PlaygroundPlayerControllerBase::Native_OnTurnAtRate(const float Rate)
-{
-	ACharacter* PossessedCharacter = this->GetCharacter();
-
-	if (PossessedCharacter != nullptr)
-	{
-		// Calculate delta for this frame from the rate information
-		PossessedCharacter->AddControllerYawInput(Rate * this->BaseTurnRate * this->GetWorld()->GetDeltaSeconds());
-	}
-}
-
-// ReSharper disable once CppMemberFunctionMayBeConst
-void AOpenPF2PlaygroundPlayerControllerBase::Native_OnLookUp(const float Value)
-{
-	ACharacter* PossessedCharacter = this->GetCharacter();
-
-	if (PossessedCharacter != nullptr)
-	{
-		PossessedCharacter->AddControllerPitchInput(Value);
-	}
-}
-
-// ReSharper disable once CppMemberFunctionMayBeConst
-void AOpenPF2PlaygroundPlayerControllerBase::Native_OnLookUpAtRate(const float Rate)
-{
-	ACharacter* PossessedCharacter = this->GetCharacter();
-
-	if (PossessedCharacter != nullptr)
-	{
-		// Calculate delta for this frame from the rate information
-		PossessedCharacter->AddControllerPitchInput(Rate * this->BaseLookUpRate * this->GetWorld()->GetDeltaSeconds());
-	}
-}
-
-void AOpenPF2PlaygroundPlayerControllerBase::Native_OnTouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
-{
-	this->Native_OnJump();
-}
-
-void AOpenPF2PlaygroundPlayerControllerBase::Native_OnTouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
-{
-	this->Native_OnStopJumping();
-}
-
-// ReSharper disable once CppMemberFunctionMayBeStatic
-void AOpenPF2PlaygroundPlayerControllerBase::Native_OnResetVR()
-{
-	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
 }

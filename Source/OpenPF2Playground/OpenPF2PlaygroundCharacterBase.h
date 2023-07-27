@@ -1,4 +1,4 @@
-// Copyright 2021-2022 Guy Elsmore-Paddock. All Rights Reserved.
+// Copyright 2021-2023 Guy Elsmore-Paddock. All Rights Reserved.
 // Adapted from content that is Copyright Epic Games, Inc. (Third Person Sample).
 // Licensed only for use with Unreal Engine.
 
@@ -15,7 +15,7 @@
 // =====================================================================================================================
 // Forward Declarations (to minimize header dependencies)
 // =====================================================================================================================
-class UPF2CommandBindingsComponent;
+class UPF2AbilityBindingsComponent;
 
 // =====================================================================================================================
 // Normal Declarations
@@ -46,21 +46,24 @@ protected:
 	 * Component that enables character abilities to be bound to input in a dynamic/configurable way at run-time.
 	 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	UPF2CommandBindingsComponent* AbilityBindings;
+	UPF2AbilityBindingsComponent* AbilityBindings;
 
 public:
 	/**
-	 * Constructs a new instance.
+	 * Default constructor.
 	 */
-	AOpenPF2PlaygroundCharacterBase();
+	explicit AOpenPF2PlaygroundCharacterBase();
 
 	// =================================================================================================================
 	// Public Methods - IInputBindableCharacterInterface Implementation
 	// =================================================================================================================
-	UFUNCTION()
-	virtual void LoadInputActionBindings() override;
+	UFUNCTION(BlueprintCallable)
+	virtual void LoadInputAbilityBindings() override;
 
 	virtual void SetupClientAbilityChangeListener() override;
+
+	UFUNCTION(BlueprintCallable)
+	virtual TScriptInterface<IPF2AbilityBindingsInterface> GetAbilityBindingsComponent() const override;
 
 	// =================================================================================================================
 	// Public Methods
