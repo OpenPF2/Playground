@@ -5,6 +5,77 @@
 Provides an Unreal Engine sample project for demonstrating how to use the OpenPF2 Role Playing Game (RPG) framework.
 
 ## Licensing
+
 This is a free learning resource. If you intend to reproduce, repurpose, or
 re-use any portion of this project in your own, you can only do so in an
 Unreal-Engine-based project. See LICENSE.txt.
+
+## Key Bindings/Input Bindings
+
+### Outside Encounters ("Exploration" and "Downtime" Modes)
+
+<img src="./Docs/Images/Screenshots/Mode_Exploration.png">
+
+| Keyboard | Mouse         | XBox Controller             | Action                                          |
+|----------|---------------|-----------------------------|-------------------------------------------------|
+| W        |               | Left joystick (3) forward   | Walk character forward                          |
+| A        |               | Left joystick (3) left      | Walk character left                             |
+| S        |               | Left joystick (3) backward  | Walk character backward                         |
+| D        |               | Left joystick (3) right     | Walk character right                            |
+|          | Move forward  | Right joystick (1) forward  | Tilt camera down (turn character to look up)    |
+|          | Move left     | Right joystick (1) left     | Tilt camera right (turn character to look left) |
+|          | Move backward | Right joystick (1) backward | Tilt camera up (turn character to look down)    |
+|          | Move right    | Right joystick (1) right    | Tilt camera left (turn camera to look right)    |
+| 1        | Left click    | A                           | Use/Move/Attack 1                               |
+| 2        |               | B                           | Attack 2                                        |
+| 3        |               | X                           | Attack 3                                        |
+| 4        |               | Y                           | Attack 4                                        |
+| Q        |               | Left bumper (5)             | Control previous character                      |
+| E        |               | Right bumper (10)           | Control next character                          |
+| SHIFT    |               | Left trigger (6)            | Open/close ability dialog (hold to keep open)   |
+
+<img src="./Docs/Images/Controller_mappings.png#gh-light-mode-only" title="XBox Controller Layout" alt="Right joystick is designated '1'; D-pad is designated '2'; Left joystick is designated '3'; Left middle button is designated '4'; Left bumper is designated '5'; Left trigger is designated '6'; XBox button is designated '7'; Right middle button is designated '8'; Right trigger is designated '9'; Right bumper is designated '10'; 'A' is designated 'A'; 'B' is designated 'B'; 'X' is designated 'X'; and 'Y' is designated 'Y'" width="755">
+
+### During Encounters ("Encounter" Mode)
+
+<img src="./Docs/Images/Screenshots/Mode_Encounter.png">
+
+| Keyboard | Mouse            | XBox Controller             | Action                                                |
+|----------|------------------|-----------------------------|-------------------------------------------------------|
+|          | Move forward     | Left joystick (3) forward   | Move encounter cursor up in screen space              |
+|          | Move left        | Left joystick (3) left      | Move encounter cursor left in screen space            |
+|          | Move backward    | Left joystick (3) backward  | Move encounter cursor down in screen space            |
+|          | Move right       | Left joystick (3) right     | Tilt camera left (turn camera to look right)          |
+| W        |                  | Right joystick (1) forward  | Fly camera forward                                    |
+| A        |                  | Right joystick (1) left     | Fly camera left                                       |
+| S        |                  | Right joystick (1) backward | Fly camera backward                                   |
+| D        |                  | Right joystick (1) right    | Fly camera right                                      |
+| Z        |                  | D-Pad (2) right             | Zoom camera in on active character                    |
+| C        |                  | D-Pad (2) left              | Zoom camera out from active character                 |
+|          | Mouse wheel up   | D-Pad (2) up                | Tilt camera down and zoom in towards active character |
+|          | Mouse wheel down | D-Pad (2) down              | Tilt camera up and zoom out from active character     |
+| 1        | Left click       | A                           | Use/Move/Attack 1 (depending on target square)        |
+| 2        |                  | B                           | Attack 2                                              |
+| 3        |                  | X                           | Attack 3                                              |
+| 4        |                  | Y                           | Attack 4                                              |
+| Q        |                  | Left bumper (5)             | Control previous character                            |
+| E        |                  | Right bumper (10)           | Control next character                                |
+| SHIFT    |                  | Left trigger (6)            | Open/close ability dialog (hold to keep open)         |
+
+<img src="./Docs/Images/Controller_mappings.png#gh-light-mode-only" title="XBox Controller Layout" alt="Right joystick is designated '1'; D-pad is designated '2'; Left joystick is designated '3'; Left middle button is designated '4'; Left bumper is designated '5'; Left trigger is designated '6'; XBox button is designated '7'; Right middle button is designated '8'; Right trigger is designated '9'; Right bumper is designated '10'; 'A' is designated 'A'; 'B' is designated 'B'; 'X' is designated 'X'; and 'Y' is designated 'Y'" width="755">
+
+### In Ability Dialog
+<img src="./Docs/Images/Screenshots/Ability_Dialog.png">
+
+| Keyboard       | Mouse | XBox Controller   | Action                                                                              |
+|----------------|-------|-------------------|-------------------------------------------------------------------------------------|
+| Down arrow/S/D |       | D-Pad (2) down    | Select first ability/Move ability cursor/selection down in ability list             |
+| Up arrow/W/A   |       | D-Pad (2) up      | Select last ability/Move ability cursor/selection up in ability list                |
+| 2              |       | B                 | Bind ability to attack 2                                                            |
+| 3              |       | X                 | Bind ability to attack 3                                                            |
+| 4              |       | Y                 | Bind ability to attack 4                                                            |
+| Q              |       | Left bumper (5)   | Switch to bindings for previous character                                           |
+| E              |       | Right bumper (10) | Switch to bindings for next character                                               |
+| SHIFT          |       | Left trigger (6)  | Open/close ability dialog (hold to keep open; release to activate selected ability) |
+
+<img src="./Docs/Images/Controller_mappings.png#gh-light-mode-only" title="XBox Controller Layout" alt="Right joystick is designated '1'; D-pad is designated '2'; Left joystick is designated '3'; Left middle button is designated '4'; Left bumper is designated '5'; Left trigger is designated '6'; XBox button is designated '7'; Right middle button is designated '8'; Right trigger is designated '9'; Right bumper is designated '10'; 'A' is designated 'A'; 'B' is designated 'B'; 'X' is designated 'X'; and 'Y' is designated 'Y'" width="755">
