@@ -57,12 +57,10 @@ public:
 	// =================================================================================================================
 	// Public Methods - IInputBindableCharacterInterface Implementation
 	// =================================================================================================================
-	UFUNCTION(BlueprintCallable)
 	virtual void LoadInputAbilityBindings() override;
 
 	virtual void SetupClientAbilityChangeListener() override;
 
-	UFUNCTION(BlueprintCallable)
 	virtual TScriptInterface<IPF2AbilityBindingsInterface> GetAbilityBindingsComponent() const override;
 
 	// =================================================================================================================
