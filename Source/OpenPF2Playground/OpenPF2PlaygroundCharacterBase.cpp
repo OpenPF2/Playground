@@ -88,7 +88,7 @@ void AOpenPF2PlaygroundCharacterBase::LoadInputAbilityBindings()
 
 void AOpenPF2PlaygroundCharacterBase::SetupClientAbilityChangeListener()
 {
-	IPF2AbilitySystemInterface* Asc = Cast<IPF2AbilitySystemInterface>(this->GetAbilitySystemComponent());
+	const IPF2AbilitySystemInterface* Asc = Cast<IPF2AbilitySystemInterface>(this->GetAbilitySystemComponent());
 
 	if (Asc == nullptr)
 	{
@@ -102,9 +102,9 @@ void AOpenPF2PlaygroundCharacterBase::SetupClientAbilityChangeListener()
 	}
 	else
 	{
-		Asc->GetClientAbilityChangeDelegate()->AddUniqueDynamic(
+		Asc->GetEvents()->OnAbilitiesLoaded.AddUniqueDynamic(
 			this,
-			&AOpenPF2PlaygroundCharacterBase::LoadInputAbilityBindings
+			&AOpenPF2PlaygroundCharacterBase::Native_OnAbilitiesLoaded
 		);
 	}
 }
@@ -121,4 +121,12 @@ void AOpenPF2PlaygroundCharacterBase::SetupPlayerInputComponent(UInputComponent*
 	check(PlayerInputComponent != nullptr);
 
 	this->AbilityBindings->ConnectToInput(EnhancedInputComponent);
+}
+
+void AOpenPF2PlaygroundCharacterBase::Native_OnAbilitiesLoaded(const TScriptInterface<IPF2AbilitySystemInterface>& Asc)
+{
+	// We don't expect an ASC from another character to notify this character.
+	check(Asc.GetObject() == this->AbilitySystemComponent);
+
+	this->LoadInputAbilityBindings();
 }
