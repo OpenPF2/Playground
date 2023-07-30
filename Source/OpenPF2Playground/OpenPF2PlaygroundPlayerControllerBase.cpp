@@ -38,9 +38,10 @@ void AOpenPF2PlaygroundPlayerControllerBase::SetPawn(APawn* InPawn)
 }
 
 void AOpenPF2PlaygroundPlayerControllerBase::Native_OnCharacterGiven(
+	const TScriptInterface<IPF2CharacterQueueInterface>& CharacterQueueComponent,
 	const TScriptInterface<IPF2CharacterInterface>& GivenCharacter)
 {
-	Super::Native_OnCharacterGiven(GivenCharacter);
+	Super::Native_OnCharacterGiven(CharacterQueueComponent, GivenCharacter);
 
 	this->AcknowledgeOwnership(GivenCharacter);
 }
