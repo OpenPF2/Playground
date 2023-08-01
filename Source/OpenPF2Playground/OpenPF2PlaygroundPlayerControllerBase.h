@@ -59,7 +59,8 @@ protected:
 	// =================================================================================================================
 	// Protected Methods - APF2PlayerControllerBase Overrides
 	// =================================================================================================================
-	virtual void Native_OnCharacterGiven(const TScriptInterface<IPF2CharacterInterface>& GivenCharacter) override;
+	virtual void Native_OnCharacterGiven(const TScriptInterface<IPF2CharacterQueueInterface>& CharacterQueueComponent,
+	                                     const TScriptInterface<IPF2CharacterInterface>&      GivenCharacter) override;
 
 	// =================================================================================================================
 	// Protected Methods

@@ -95,4 +95,16 @@ protected:
 	// Protected Methods - APawn Overrides
 	// =================================================================================================================
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
+	// =================================================================================================================
+	// Protected Native Event Callbacks
+	// =================================================================================================================
+	/**
+	 * Native event fired when the character's abilities have finished being replicated from the server.
+	 *
+	 * @param Asc
+	 *	The ability system component that has notified this character abilities are loaded.
+	 */
+	UFUNCTION()
+	virtual void Native_OnAbilitiesLoaded(const TScriptInterface<IPF2AbilitySystemInterface>& Asc);
 };
