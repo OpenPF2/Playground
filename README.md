@@ -4,6 +4,28 @@
 
 Provides an Unreal Engine sample project for demonstrating how to use the OpenPF2 Role Playing Game (RPG) framework.
 
+## Compatibility
+
+This project is compatible with Unreal Engine 5.2.
+
+## Current Status
+
+This is a pre-alpha. Low-level framework code is in place but this is not yet a very fun/playable game. Still, there are
+several interesting pieces to look at, including:
+- How input gets bound to character abilities:
+  - The bindings vary by character.
+  - Default bindings can be specified on each character.
+  - The player can remap which abilities are bound during play by bringing up the ability menu.
+  - Bindings can be re-routed or filtered dynamically using "Ability Execution Filters". This is used to route 
+    "Attack 1" to either an attack or movement action during encounters. 
+- How game mode transitions are handled.
+- How abilities get queued in encounter mode vs. executed immediately in exploration mode.
+- How turns are orchestrated by AI behaviors during encounters.
+- How the floating camera is handled (including its collision with the world relative to its tilt and zoom using a 
+  custom collision component for delegating collision checks).
+
+If something you'd like to see is not in this sample, please check back often! More is being added every week.
+
 ## Licensing
 
 This is a free learning resource. If you intend to reproduce, repurpose, or
