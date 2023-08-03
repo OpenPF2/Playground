@@ -4,6 +4,10 @@
 
 Provides an Unreal Engine sample project for demonstrating how to use the OpenPF2 Role Playing Game (RPG) framework.
 
+## Compatibility
+
+This project is compatible with Unreal Engine 5.2.
+
 ## Licensing
 
 This is a free learning resource. If you intend to reproduce, repurpose, or
