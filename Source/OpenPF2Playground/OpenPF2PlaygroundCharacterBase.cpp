@@ -88,7 +88,22 @@ void AOpenPF2PlaygroundCharacterBase::LoadInputAbilityBindings()
 
 void AOpenPF2PlaygroundCharacterBase::SetupClientAbilityChangeListener()
 {
-	const IPF2AbilitySystemInterface* Asc = Cast<IPF2AbilitySystemInterface>(this->GetAbilitySystemComponent());
+	IPF2AbilitySystemInterface* Asc;
+
+	if (this->HasAuthority())
+	{
+		// Only run this on the client.
+		return;
+	}
+
+	Asc = Cast<IPF2AbilitySystemInterface>(this->GetAbilitySystemComponent());
+
+	UE_LOG(
+		LogPf2PlaygroundInput,
+		VeryVerbose,
+		TEXT("[%s] Client ability change listener setup."),
+		*(PF2LogUtilities::GetHostNetId(this->GetWorld()))
+	);
 
 	if (Asc == nullptr)
 	{
