@@ -15,6 +15,7 @@
 #include <GameFramework/SpringArmComponent.h>
 
 #include "OpenPF2Playground.h"
+#include "OpenPF2PlaygroundAbilityBindingsComponent.h"
 
 #include "Commands/PF2AbilityBindingsComponent.h"
 
@@ -60,7 +61,7 @@ AOpenPF2PlaygroundCharacterBase::AOpenPF2PlaygroundCharacterBase()
 
 	// Create the component that allows binding abilities to input actions.
 	UPF2AbilityBindingsComponent* BindingsComponent =
-		CreateDefaultSubobject<UPF2AbilityBindingsComponent>("AbilityBindings");
+		CreateDefaultSubobject<UOpenPF2PlaygroundAbilityBindingsComponent>("AbilityBindings");
 
 	this->AbilityBindings = BindingsComponent;
 
