@@ -48,6 +48,8 @@ Attribution 3.0 Unported (CC BY 3.0) license
   https://thenounproject.com/icon/sword-4992493/
 - T_Move_Walk: "foot" by Aleksandr Vector from NounProject.com
   https://thenounproject.com/icon/foot-1009059/
+- T_OrientToFaceTarget: "Rotate" by iconfield from NounProject.com
+  https://thenounproject.com/icon/rotate-4611490/
 
 Depending on the needs of your project, you may wish to license these materials
 through a commercial, royalty-free license from the Noun Project or replace them
