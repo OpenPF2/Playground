@@ -44,7 +44,7 @@ Attribution 3.0 Unported (CC BY 3.0) license
   https://thenounproject.com/icon/target-2518419/
 - T_Attack_TwinBlast_FireGun: "Gun" by Viet EDC from NounProject.com
   https://thenounproject.com/icon/gun-1036548/
-- T_Attack_Greystone_Sword: "Sword" by Suncheli Project from NounProject.com
+- T_MeleeAttack_Sword: "Sword" by Suncheli Project from NounProject.com
   https://thenounproject.com/icon/sword-4992493/
 - T_Move: "foot" by Aleksandr Vector from NounProject.com
   https://thenounproject.com/icon/foot-1009059/
