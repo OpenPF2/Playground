@@ -10,8 +10,8 @@ public class OpenPF2PlaygroundEditorTarget : TargetRules
 	public OpenPF2PlaygroundEditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
-		DefaultBuildSettings = BuildSettingsVersion.V2;
-		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_2;
+		DefaultBuildSettings = BuildSettingsVersion.V4;
+		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_3;
 		ExtraModuleNames.Add("OpenPF2Playground");
 	}
 }

@@ -6,7 +6,7 @@ Provides an Unreal Engine sample project for demonstrating how to use the OpenPF
 
 ## Compatibility
 
-This project is compatible with Unreal Engine 5.2.
+This project is compatible with Unreal Engine 5.3.
 
 ## Current Status
 
