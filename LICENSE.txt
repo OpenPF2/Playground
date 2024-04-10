@@ -42,14 +42,8 @@ Attribution 3.0 Unported (CC BY 3.0) license
 
 - T_EncounterCursor: "Target" by vectlab from NounProject.com
   https://thenounproject.com/icon/target-2518419/
-- T_RangedAttack_Gun: "Gun" by Viet EDC from NounProject.com
-  https://thenounproject.com/icon/gun-1036548/
-- T_MeleeAttack_Sword: "Sword" by Suncheli Project from NounProject.com
-  https://thenounproject.com/icon/sword-4992493/
 - T_FaceTarget: "Rotate" by iconfield from NounProject.com
   https://thenounproject.com/icon/rotate-4611490/
-- T_RangedAttack_Generic: "Target" by Juraj Sedlák from NounProject.com
-  https://thenounproject.com/icon/target-983378/
 - T_SkullIcon: "Skull" by Alvaro Cabrera from NounProject.com
   https://thenounproject.com/icon/skull-1174098/
 - T_WoundIcon: "Wound Plater" by Yoga Ekatama from NounProject.com
