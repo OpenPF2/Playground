@@ -1,3 +1,6 @@
 [submodule "OpenPF2Core"]
-	path = "Plugins/OpenPF2Core"
+	path = Plugins/OpenPF2Core
 	url = https://github.com/OpenPF2/PF2Core.git
+[submodule "EnhancedAutomationSpecs"]
+	path = Plugins/EnhancedAutomationSpecs
+	url = https://github.com/OpenPF2/EnhancedUnrealSpecs.git
