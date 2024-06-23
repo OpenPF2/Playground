@@ -7,7 +7,7 @@
 
 #include <GameFramework/GameStateBase.h>
 
-#include "OpenPF2Core.h"
+#include "OpenPF2GameFramework.h"
 #include "PF2GameStateInterface.h"
 
 #include "Libraries/PF2AbilitySystemLibrary.h"
@@ -33,7 +33,7 @@ FGameplayEventData UOpenPF2PlaygroundAbilityBindingsComponent::BuildPayloadForAb
 			if (PlayerController == nullptr)
 			{
 				UE_LOG(
-					LogPf2CoreAbilities,
+					LogPf2Abilities,
 					Error,
 					TEXT("Player controller is null or not compatible with OpenPF2, so ability target cannot be captured.")
 				);
