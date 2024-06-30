@@ -42,14 +42,22 @@ Attribution 3.0 Unported (CC BY 3.0) license
 
 - T_EncounterCursor: "Target" by vectlab from NounProject.com
   https://thenounproject.com/icon/target-2518419/
-- T_Attack_TwinBlast_FireGun: "Gun" by Viet EDC from NounProject.com
+- T_RangedAttack_Gun: "Gun" by Viet EDC from NounProject.com
   https://thenounproject.com/icon/gun-1036548/
-- T_Attack_Greystone_Sword: "Sword" by Suncheli Project from NounProject.com
+- T_MeleeAttack_Sword: "Sword" by Suncheli Project from NounProject.com
   https://thenounproject.com/icon/sword-4992493/
-- T_MoveToLocation: "foot" by Aleksandr Vector from NounProject.com
+- T_Move: "foot" by Aleksandr Vector from NounProject.com
   https://thenounproject.com/icon/foot-1009059/
-- T_OrientToFaceTarget: "Rotate" by iconfield from NounProject.com
+- T_FaceTarget: "Rotate" by iconfield from NounProject.com
   https://thenounproject.com/icon/rotate-4611490/
+- T_MeleeAttack_Unarmed: "Fist" by Cuputo from NounProject.com
+  https://thenounproject.com/icon/fist-4145413/
+- T_RangedAttack_Generic: "Target" by Juraj Sedlák from NounProject.com
+  https://thenounproject.com/icon/target-983378/
+- T_SkullIcon: "Skull" by Alvaro Cabrera from NounProject.com
+  https://thenounproject.com/icon/skull-1174098/
+- T_WoundIcon: "Wound Plater" by Yoga Ekatama from NounProject.com
+  https://thenounproject.com/icon/wound-plater-2921766/
 
 Depending on the needs of your project, you may wish to license these materials
 through a commercial, royalty-free license from the Noun Project or replace them
