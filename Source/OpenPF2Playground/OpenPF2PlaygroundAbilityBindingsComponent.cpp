@@ -1,4 +1,4 @@
-﻿// OpenPF2 for UE Game Logic, Copyright 2023, Guy Elsmore-Paddock. All Rights Reserved.
+﻿// OpenPF2 for UE Game Logic, Copyright 2023-2024, Guy Elsmore-Paddock. All Rights Reserved.
 //
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 // distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -7,6 +7,7 @@
 
 #include <GameFramework/GameStateBase.h>
 
+#include "OpenPF2GameFramework.h"
 #include "PF2GameStateInterface.h"
 
 #include "Libraries/PF2AbilitySystemLibrary.h"
@@ -32,7 +33,7 @@ FGameplayEventData UOpenPF2PlaygroundAbilityBindingsComponent::BuildPayloadForAb
 			if (PlayerController == nullptr)
 			{
 				UE_LOG(
-					LogPf2CoreAbilities,
+					LogPf2Abilities,
 					Error,
 					TEXT("Player controller is null or not compatible with OpenPF2, so ability target cannot be captured.")
 				);
