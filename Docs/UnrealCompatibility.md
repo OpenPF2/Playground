@@ -27,7 +27,10 @@ This matrix validates the listed backends and patch releases on Win64. It does n
 
 ## Validated source revisions
 
-The validated OpenPF2 code is at `c63f159e56f81140f23bd2c27369b8a76d305541`; EnhancedUnrealSpecs is at `a5a267751eb06f28be32802aa884559387903d26`. The Playground commit containing this guide pins both submodules, including the OpenPF2 compatibility documentation. Later documentation-only commits do not change the recorded source and asset fingerprint.
+The validated OpenPF2 code is at `c63f159e56f81140f23bd2c27369b8a76d305541`; EnhancedUnrealSpecs is at `a5a267751eb06f28be32802aa884559387903d26`. The Playground commit containing this guide pins both submodules, including subsequent contributor documentation and copyright notice updates.
+
+The recorded fingerprint identifies the tested snapshot before the copyright end-year updates. Those later source edits change copyright comments only; exact byte comparisons verified that all other source content and third-party notices were preserved. The full engine matrix was not rerun for this comment and documentation follow-up.
+
 ## Target rules
 
 Both the Editor and Game targets select named settings through UnrealBuildTool's engine-version preprocessor symbols.
