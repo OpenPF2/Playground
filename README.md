@@ -6,7 +6,10 @@ Provides an Unreal Engine sample project for demonstrating how to use the OpenPF
 
 ## Compatibility
 
-This branch targets Unreal Engine 5.6 and has been built and tested with Unreal Engine 5.6.1.
+This branch supports Unreal Engine 5.3 through 5.8 on Win64. The default project association and shared asset-authoring
+baseline are UE 5.3. See [Unreal compatibility](Docs/UnrealCompatibility.md) for tested patch versions, explicit build
+settings, prerequisites, validation results, and remaining warnings.
+Offscreen validation uses D3D11 on UE 5.3.2 and D3D12 on the other listed engine patches.
 
 ## Current Status
 
