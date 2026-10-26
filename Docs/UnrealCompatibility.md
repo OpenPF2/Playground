@@ -4,7 +4,7 @@ OpenPF2, Playground, and EnhancedUnrealSpecs have passed the Win64 matrix below.
 
 ## Validated patch versions
 
-Validation completed on 2026-10-19 using the same source and asset fingerprint, `A71692A74F28EC1181E32CCCB1660D31061295EA682C48971591FEE45FEE1895`.
+Validation completed on 2026-10-26 using the same source and asset fingerprint, `F5DE705FBA27CA7DEAFDC052D5CAD7811B1604E64DEA9D058B49BCA90153BD77`.
 
 | Engine patch | MSVC selected | Windows SDK | Offscreen RHI | Blueprint warnings | All six stages |
 | --- | --- | --- | --- | --- | --- |
@@ -13,23 +13,23 @@ Validation completed on 2026-10-19 using the same source and asset fingerprint, 
 | 5.5.4 | 14.38.33145 | 10.0.22621.0 | D3D12 | 0 | Passed |
 | 5.6.1 | 14.38.33145 | 10.0.22621.0 | D3D12 | 0 | Passed |
 | 5.7.4 | 14.44.35228 | 10.0.22621.0 | D3D12 | 2 | Passed |
-| 5.8.3 | 14.44.35228 | 10.0.22621.0 | D3D12 | 2 | Passed |
+| 5.8.4 | 14.44.35228 | 10.0.22621.0 | D3D12 | 2 | Passed |
 
-Every row passed Development Editor and Game builds, all 1,886 OpenPF2 and 71 EnhancedUnrealSpecs cases, compilation of 257 Blueprints, Soul Cave cooking and packaging, delayed offscreen rendering with normal shutdown, and a loopback server/client connection. There were zero C++, C#, or linker warnings, zero failed or skipped tests, and zero Blueprint errors or load failures. All six screenshots were visually inspected.
+Every row passed Development Editor and Game builds, all 1,890 OpenPF2 and 71 EnhancedUnrealSpecs cases, compilation of 257 Blueprints, Soul Cave cooking and packaging, delayed offscreen rendering with normal shutdown, and a loopback server/client connection. There were zero C++, C#, or linker warnings, zero failed or skipped tests, and zero Blueprint errors or load failures. All six screenshots were visually inspected. Both party members and the expected map geometry and lighting were present.
 
-The installed MSVC directories are `14.36.32532`, `14.38.33130`, and `14.44.35207`; the table records the actual toolchain versions reported by UBT. The [local result table](../Saved/Compatibility/results.md) links each engine's logs, test reports, screenshot, and package. Full warnings and toolchain paths are retained in each `result.json`.
+The installed MSVC directories are `14.36.32532`, `14.38.33130`, and `14.44.35207`; the table records the actual toolchain versions reported by UBT. The [local result table](../Saved/Compatibility/TagMigration-20261025/results.md) links each engine's logs, test reports, screenshot, and package. Full warnings and toolchain paths are retained in each `result.json`.
 
 ### Rendering scope
 
-UE 5.3.2's D3D12 `-RenderOffscreen` path emits a handled `SwapChain4.GetReference()` ensure during viewport initialization in this installed engine. Its validated offscreen run uses the project's supported D3D11 SM5 backend through `-d3d11`. UE 5.4.4 through 5.8.3 use D3D12. The runner keeps runtime error and ensure checks enabled; it does not count the failing D3D12 offscreen probe as a pass.
+UE 5.3.2's D3D12 `-RenderOffscreen` path emits a handled `SwapChain4.GetReference()` ensure during viewport initialization in this installed engine. Its validated offscreen run uses the project's supported D3D11 SM5 backend through `-d3d11`. UE 5.4.4 through 5.8.4 use D3D12. The runner keeps runtime error and ensure checks enabled; it does not count the failing D3D12 offscreen probe as a pass.
 
 This matrix validates the listed backends and patch releases on Win64. It does not establish support for UE 5.3.2 D3D12 offscreen rendering or other untested graphics backends.
 
 ## Validated source revisions
 
-The validated OpenPF2 code is at `c63f159e56f81140f23bd2c27369b8a76d305541`; EnhancedUnrealSpecs is at `a5a267751eb06f28be32802aa884559387903d26`. The Playground commit containing this guide pins both submodules, including subsequent contributor documentation and copyright notice updates.
+The validated OpenPF2 code is at `a8776f74f19f0325f477acdaa8c369054c2750f5`; EnhancedUnrealSpecs is at `9c64a341e50385bab1e00a24f31208dfc84743b2`. Playground's validated implementation is at `4fd90ec`. The Playground commit containing this guide pins both submodules.
 
-The recorded fingerprint identifies the tested snapshot before the copyright end-year updates. Those later source edits change copyright comments only; exact byte comparisons verified that all other source content and third-party notices were preserved. The full engine matrix was not rerun for this comment and documentation follow-up.
+Both native-tag migration branches include their compatibility bases: Playground `f432416` and OpenPF2 `0f7dc44`. The recorded fingerprint covers the final native registrations, redirects, editor migration commandlet, and resaved assets. This results documentation does not change build inputs.
 
 ## Target rules
 
@@ -66,6 +66,10 @@ Use `Scripts/Migrate-NativeGameplayTags.ps1 -Mode Resave` with the UE 5.3 editor
 
 After a successful resave, remove the copied redirects from Playground's `Config/DefaultGameplayTags.ini` and run the script with `-Mode Audit`. This starts a fresh editor process, requires zero active redirects, loads the same complete manifest, and compares the serialized values with the resave baseline. Keep the plugin's redirect map for consuming projects that still have older assets. Reports and logs are under `Saved/TagMigration-20261025`.
 
+The completed migration loaded all 7,802 tracked packages, refreshed and saved all 259 Blueprints, and saved 262 packages in total. The fresh redirect-free audit matched 6,011 serialized tag-value entries with zero invalid tags, legacy references, or comparison failures. Empty output-pin defaults that Blueprint reconstruction regenerates and Unreal discards on reload are excluded from the comparison; nonempty input and output defaults remain checked. Integration probes confirmed that missing nonempty input or output values fail the audit.
+
+Playground now has zero gameplay-tag redirects. OpenPF2 retains 723 redirects for older consuming projects. Ordinary framework tags use `PF2.*`; gameplay cues and trigger categories retain `GameplayCue.PF2.*` and `TriggerTagCategory.PF2.*`. The migration completes this existing naming scheme, including singular `PF2.CurrencyUnit.Coin.*`.
+
 The manifest includes all tracked `.uasset` and `.umap` files in both repositories, including third-party content and maps with embedded Blueprints. Missing packages, Git LFS pointers, legacy references, invalid tags, compilation errors, and changed baseline values fail the migration. Add new assets before creating the baseline so they enter the tracked manifest.
 
 ### Compatibility matrix
@@ -101,13 +105,13 @@ The runner copies materialized tracked files from Playground, OpenPF2, and Enhan
 An engine passes only when all stages pass for the same source fingerprint and engine changelist:
 
 1. Development Editor and Game builds, including the applicable OpenPF2 modules.
-2. At least 1,886 passing OpenPF2 tests and 71 passing EnhancedUnrealSpecs tests, with zero failed, unrun, or warning results.
+2. At least 1,890 passing OpenPF2 tests and 71 passing EnhancedUnrealSpecs tests, with zero failed, unrun, or warning results.
 3. Blueprint compilation with zero compilation errors or packages that fail to load.
 4. A complete Soul Cave cook, stage, package, and archive using that engine.
 5. Packaged map startup, an offscreen screenshot after 300 gameplay ticks, and a normal zero-code shutdown of that same rendered process. Benchmark mode advances at 30 simulated frames per second and exits after 30 simulated seconds. The screenshot's render-delay setting alone does not advance gameplay.
 6. A client joining a loopback editor server and loading the replicated Soul Cave map.
 
-`Saved/Compatibility/results.md` summarizes the matrix. Each engine's `result.json`, `Logs`, `Reports`, `Packages`, and `Runtime` directories contain its evidence. A repeated Build stage invalidates dependent stage results; a repeated Package stage invalidates its Smoke result. Compiler and engine warnings remain visible in the result file.
+`Saved/Compatibility/TagMigration-20261025/results.md` summarizes this matrix. Each engine's `result.json`, `Logs`, `Reports`, `Packages`, and `Runtime` directories contain its evidence. A repeated Build stage invalidates dependent stage results; a repeated Package stage invalidates its Smoke result. Compiler and engine warnings remain visible in the result file.
 
 Rendered screenshots need visual inspection, and these smoke checks do not replace an interactive gameplay test. Other platforms and untested patch releases require their own validation.
 
