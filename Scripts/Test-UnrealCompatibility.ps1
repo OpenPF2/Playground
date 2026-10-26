@@ -285,6 +285,9 @@ foreach ($minor in $EngineVersions) {
             $assetInfo = Get-Item -LiteralPath $destination
             $assetInfo.IsReadOnly = $true
             $nextVerifiedInputs[$inputFile.RelativePath] = @{ Hash=$inputFile.Hash; LastWriteTicks=$assetInfo.LastWriteTimeUtc.Ticks }
+        } elseif ($destination -match '\.cpp$') {
+            # Without Git metadata, adaptive unity treats every writable copied source as modified.
+            (Get-Item -LiteralPath $destination).IsReadOnly = $true
         }
         $preparedCount++
         if ($preparedCount % 1000 -eq 0) { Write-Host "UE $engineVersion Prepared $preparedCount input files..." }

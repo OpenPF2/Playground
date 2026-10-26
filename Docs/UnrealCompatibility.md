@@ -94,7 +94,7 @@ From the project directory in PowerShell:
 
 The default engine root is `C:\Program Files\Epic Games`; `-EngineRoot` overrides it. `-OutputRoot` may select a child of this project's `Saved/Compatibility` directory. A temporary unused drive alias keeps generated paths short enough for UE 5.3 and is removed on normal completion or an exception.
 
-The runner copies materialized tracked files from Playground, OpenPF2, and EnhancedUnrealSpecs. It hashes build inputs, verifies new copies, and reuses previously verified read-only assets only while their hashes and metadata still match. It rejects unexpected source, content, or default configuration files in reused copies. Each engine has separate project, intermediate, binary, configuration, cook, package, and report directories. Commit new source files before running so they are included in the snapshot.
+The runner copies materialized tracked files from Playground, OpenPF2, and EnhancedUnrealSpecs. It hashes build inputs, verifies new copies, and reuses previously verified read-only assets only while their hashes and metadata still match. Copied C++ files are also read-only so Unreal's adaptive unity heuristic treats them as clean sources. The isolated copies have no Git metadata; leaving every C++ file writable would mark every file as modified and exclude them all from unity builds. The runner still updates the Playground entry source timestamp to verify toolchain selection. It rejects unexpected source, content, or default configuration files in reused copies. Each engine has separate project, intermediate, binary, configuration, cook, package, and report directories. Commit new source files before running so they are included in the snapshot.
 
 ## Acceptance and evidence
 
