@@ -60,6 +60,16 @@ The targets reject versions outside this range. Modules inherit the selected tar
 
 ## Run the matrix
 
+### Native gameplay tag migration
+
+Use `Scripts/Migrate-NativeGameplayTags.ps1 -Mode Resave` with the UE 5.3 editor built from the current source. It loads every tracked Playground and OpenPF2 asset, validates the plugin's legacy-name redirects, refreshes and compiles every Blueprint, and saves Blueprints and other packages containing tags. The report compares canonical tag values before and after Blueprint reconstruction and refuses to save a package that loses values or retains invalid tags.
+
+After a successful resave, remove the copied redirects from Playground's `Config/DefaultGameplayTags.ini` and run the script with `-Mode Audit`. This starts a fresh editor process, requires zero active redirects, loads the same complete manifest, and compares the serialized values with the resave baseline. Keep the plugin's redirect map for consuming projects that still have older assets. Reports and logs are under `Saved/TagMigration-20261025`.
+
+The manifest includes all tracked `.uasset` and `.umap` files in both repositories, including third-party content and maps with embedded Blueprints. Missing packages, Git LFS pointers, legacy references, invalid tags, compilation errors, and changed baseline values fail the migration. Add new assets before creating the baseline so they enter the tracked manifest.
+
+### Compatibility matrix
+
 Install PowerShell 7.2 or later, Git with Git LFS, the selected Unreal engines, Visual Studio C++ tools, and Windows SDKs accepted by those engines. Initialize both submodules and materialize their Git LFS assets before running. The runner discovers installed tools and records the compiler and SDK selected by UnrealBuildTool. It regenerates each target's build graph and recompiles the small Playground entry source so reused copies do not retain stale source lists and otherwise up-to-date builds still report their toolchains. It requires room for the selected materialized project copies plus at least 30 GiB of build/cook headroom.
 
 SDK preflight checks the engine's allowed and software-version bounds before preparing its copy. UE 5.3 predates `Windows_SDK.json`; its explicit bounds match `MicrosoftPlatformSDK.Versions.cs`, including the 10.0.18362.0 software minimum. Newer engines use their installed JSON policy.

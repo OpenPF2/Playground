@@ -329,7 +329,7 @@ foreach ($minor in $EngineVersions) {
                     if (!$phaseResult.Toolchain.Count) { throw 'Build succeeded, but its compiler and SDK were not recorded. Inspect the build logs.' }
                 }
                 'Tests' {
-                    foreach ($suite in @(@{Name='OpenPF2'; Minimum=1886}, @{Name='EnhancedUnrealSpecs'; Minimum=71})) {
+                    foreach ($suite in @(@{Name='OpenPF2'; Minimum=1890}, @{Name='EnhancedUnrealSpecs'; Minimum=71})) {
                         $report = Join-Path $versionRoot "Reports\$($suite.Name)"
                         $testLog = Join-Path $logs "Tests-$($suite.Name).log"
                         $reportIndex = Join-Path $report 'index.json'
